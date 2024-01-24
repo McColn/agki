@@ -1,0 +1,71 @@
+{% extends 'app/base2.html' %}
+{%block content%}
+
+<br>
+<div class="container">
+<div class="col-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Patient list</h4>
+
+            {% for message in messages %}
+                    <div class = "alert alert-primary alert-dismissible fade show" role="alert">
+                        {{message}}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
+                    </div>
+                    {% endfor %}
+
+        <div class="row">
+        <div class="col-md-6">
+        {% if user.is_receptionist %}
+        <a href="{% url 'patient' %}"><button class='btn btn-outline-success btn-fw'>Add new Patient</button></a>         
+        {% endif %}
+        {% if user.is_pharmacist %}
+        <a href="{% url 'prescription_list' %}"><button class='btn btn-outline-success btn-fw'>Patient & medicine</button></a>  
+        {% endif %}       
+        </div>
+        <div class="col-md-6">
+            
+        </div>
+    </div>
+        <div class="table-responsive">
+            {% if x %}
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>fullname</th>
+                        <th>age</th>
+                        <th>gender </th>
+                       <th>action</th>
+                        </tr>
+                </thead>
+                <tbody>
+                    {% for i in x %}
+                    <tr>
+                        <td class="font-weight-bold">{{i.fullname}}</td>
+                        <td>{{i.age}}</td>
+                        <td>{{i.gender}}</td>
+                        <td>
+                            <a href="{% url 'patientDetail' i.id %}"><label class="badge badge-success badge-pill">Process</label></a> 
+                        </td>
+                     </tr>
+                    {% endfor %}
+                    <!-- Add more rows as needed -->
+                </tbody>
+            </table>
+            {% else %}
+            <br>
+            <div class="alert alert-fill-primary" role="alert">
+                <i class="fa fa-exclamation-triangle"></i>
+                There! No success yet
+              </div>
+            {% endif %}
+        </div>
+
+        <br>
+        {% comment %} <a href="{% url 'home' %}"><button class="btn btn-inverse-primary btn-fw">Cancel</button></a> {% endcomment %}
+    </div>
+    </div>
+</div>
+</div>
+{%endblock%}

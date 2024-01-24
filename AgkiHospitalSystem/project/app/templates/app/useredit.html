@@ -1,0 +1,98 @@
+
+{% extends 'app/base2.html' %}
+{%block content%}
+
+<div class="container">
+  <br>
+<div class="col-12 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+            <h2 class="card-title">Edit user</h2>
+            
+            <form class="forms-sample" method='POST' enctype="multipart/form-data">
+
+                {% csrf_token %}
+                
+              <div class="form-group">
+                <label for="name">Username</label>
+                <input type="text" class="form-control" name="username" value="{{s.username}}">
+              </div>
+              <div class="form-group">
+                <label for="location">Firstname</label>
+                <input type="text" class="form-control" name="first_name" value="{{s.first_name}}">
+              </div>
+              <div class="form-group">
+                <label for="location">lastname</label>
+                <input type="text" class="form-control" name="last_name" value="{{s.last_name}}">
+              </div>
+              <div class="form-group">
+                <label for="location">Age</label>
+                <input type="text" class="form-control" name="age" value="{{s.age}}">
+              </div>
+              <div class="form-group">
+                <label for="location">Phonenumber</label>
+                <input type="text" class="form-control" name="phone" value="{{s.phone}}">
+              </div>
+              <div class="form-group">
+                <label for="location">Location</label>
+                <input type="text" class="form-control" name="location" value="{{s.location}}">
+              </div>
+              <div class="form-group">
+                <label for="position">Position</label>
+                <input type="text" class="form-control" name="position" value="{{s.position}}">
+              </div>
+              <div class="form-group">
+                <label for="position">Department</label>
+                <select class="form-control" name="department">
+                    {% for department in departments %}
+                        <option value="{{ department.id }}" {% if department.id == s.position.id %}selected{% endif %}>
+                            {{ department.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+              </div>
+            
+              <div class="form-group">
+                <label for="image">Select Image (recomended size 600x600 px):</label>
+                <input type="file" class="form-control" name="image" >
+                <br>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="is_doctor" {% if s.is_doctor %}checked{% endif %}>
+                <label class="form-check-label" for="is_doctor">Is Doctor</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="is_laboratorist" {% if s.is_laboratorist %}checked{% endif %}>
+                <label class="form-check-label" for="is_laboratorist">Is Laboratorist</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="is_receptionist" {% if s.is_receptionist %}checked{% endif %}>
+                <label class="form-check-label" for="is_receptionist">Is Receptionist</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" name="is_pharmacist" {% if s.is_pharmacist %}checked{% endif %}>
+              <label class="form-check-label" for="is_pharmacist">Is Pharmacist</label>
+          </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="is_patient" {% if s.is_patient %}checked{% endif %}>
+                <label class="form-check-label" for="is_patient">Is Patient</label>
+            </div>
+              
+              <button type="submit" class="btn btn-primary mr-2">Submit</button>
+              
+            </form>
+            <button class="btn btn-light" onclick="goBack()">Cancel</button>
+
+              <script>
+                  function goBack() {
+                      window.history.back();
+                  }
+              </script>
+        </div>
+    </div>
+</div>
+</div>        
+        
+      
+
+{%endblock%}

@@ -1,0 +1,68 @@
+{% extends 'app/base2.html' %}
+{%block content%}
+<div class="container">
+  <h5 class="mb-3">carts</h5>
+
+<div class="table-responsive">
+  <!-- <table class="table table-bordered">
+    <tr>
+      <th>user</th>
+      <th>Item</th>
+      <th>Quantity</th>
+      <th>TotalPrice</th>
+      <th>DiscountPrice</th>
+      <th>AmountSaved</th>
+      <th>FinalPrice</th>
+      <th>Ordered</th>
+    </tr>
+    
+  
+{% for order_item in x %}
+<tr class="bg-white">
+    <td>{{ order_item.user.username }}</td>
+    <td>{{ order_item.item.title }}</td>
+    <td> {{ order_item.quantity }}</td>
+    <td>${{ order_item.get_total_item_price }}</td>
+    {% if order_item.item.discount_price %}
+        <td> ${{ order_item.get_total_item_discount_price }}</td>
+    {% endif %}
+    <td>${{ order_item.get_amount_saved }}</td>
+    <td>${{ order_item.get_final_price }}</td>
+    <td>{{ order_item.ordered }}</td>
+  </tr>   
+{% endfor %}
+
+</table> -->
+
+
+<table class="table table-bordered">
+  <thead>
+      <tr>
+          <th>User</th>
+          <th>Item</th>
+          <th>Quantity</th>
+          <th>Total Price</th>
+          <th>Discount Price</th>
+          <th>Amount Saved</th>
+          <th>Final Price</th>
+      </tr>
+  </thead>
+  <tbody>
+      {% for order in x %}
+          {% for order_item in order.items.all %}
+          <tr class="bg-white">
+                  <td>{{ order.user.username }}</td>
+                  <td>{{ order_item.item.title }}</td>
+                  <td>{{ order_item.quantity }}</td>
+                  <td>{{ order_item.get_total_item_price }}</td>
+                  <td>{{ order_item.item.discount_price|default:"N/A" }}</td>
+                  <td>{{ order_item.get_amount_saved|default:"N/A" }}</td>
+                  <td>{{ order_item.get_final_price }}</td>
+              </tr>
+          {% endfor %}
+      {% endfor %}
+  </tbody>
+</table>
+</div>
+</div>
+{%endblock%}

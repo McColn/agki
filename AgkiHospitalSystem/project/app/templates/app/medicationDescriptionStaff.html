@@ -1,0 +1,41 @@
+{% extends 'app/base2.html' %}
+{% block content %}
+{% load static %}
+{% load i18n %}
+
+    <section id="blog">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <img src="{{x.image.url}}" alt="" width="100%" height="auto">
+                </div>
+
+                <div class="col-md-6 d-flex align-items-center" >
+                    <div class="team-member image-zoom ">
+                                <h5 class="mt-4">Name: <b>{{x.title}}</b></h5>
+                                
+                                <h5><b>Unit-Cost: Tsh.{{x.discount_price}}/=.</b></h5>
+                                <p><del>Actual Cost: Tsh.{{x.price}}/=.</del></p>
+                                
+                                <p>seller: <b>{{x.user}}</b></p>
+                                <p>Manufactured-date: <b>{{x.manufactured_date}}</b></p>
+                                <p>Expire date: <b>{{x.expire_date}}</b></p>
+                                <p>Number of Dosage</p>
+                                
+                                <div class="mt-2">
+                                    <a href="{% url 'medicationDescriptionEdit' x.id %}">
+                                        <button class="btn btn-success">Edit</button>
+                                    </a>
+                                </div>
+                    </div>
+                </div>
+                <div class="p-5">
+                <h5>Description:</h5>
+                <h6>{{x.description}}</h6>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+{% endblock %}

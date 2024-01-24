@@ -1,0 +1,325 @@
+{% extends 'app/base2.html' %}
+{% block content %}
+
+<!-- Your existing content -->
+
+<!-- Add the table for patient count per day -->
+<br>
+<div class="container mt-4">
+   
+<br>
+
+
+
+<!-- ======= chart Section ======= -->
+<div class="row">
+    <div class="col-lg-6">
+        <a href="{% url 'patient_count_per_period' %}"><button class="btn btn-success w-50">Patients</button></a>
+        
+    </div>
+    <div class="col-lg-6">
+        
+        <a href="{% url 'total_cost_per_period' %}"><button class="btn btn-success w-50">Sales</button></a>
+    </div>
+</div>
+<br>
+<div class="row">
+    
+    
+    <div class="col-md-12 grid-margin stretch-card">
+        
+        <div class="card">
+            <div class="card-body">
+
+                
+    <div class="section-title">
+        <h3>Patient Count Per Day <p>Today is {{ current_day }}</p></h3>
+    </div>
+
+    
+            <div class="col-md-12">
+                <canvas id="periodChart"></canvas>
+            </div>
+
+            <br>
+            <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr style="background: darkgreen; color: white;">
+                        {% for day_data in days_data %}
+                        <th>{{ day_data.day_name }}</th>
+                        {% endfor %}
+                        <!-- <th>Patient Count</th> -->
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                        <tr>
+                            {% for day_data in days_data %}
+                            <!-- <td>{{ day_data.day_name }}</td> -->
+                            <td>{{ day_data.patient_count }}</td>
+                            {% endfor %}
+                        </tr>
+                    
+                </tbody>
+            </table>
+        </div>
+        
+</div>
+
+<script>
+    // Define the period chart data using Django template tags
+    var periodChartData = {
+        labels: [{% for day_data in days_data %}'{{ day_data.day_name }}',{% endfor %}],
+        datasets: [{
+            label: 'Period Chart',
+            data: [{% for day_data in days_data %}{{ day_data.patient_count }},{% endfor %}],
+            borderColor: 'rgba(0, 128, 0, 0.2)',
+            backgroundColor: 'rgba(0, 128, 0, 0.2)',
+            borderWidth: 2,
+            fill: 'start',
+            lineTension: 0.4
+        }]
+    };
+
+    // Get the canvas element
+    var periodCtx = document.getElementById('periodChart').getContext('2d');
+
+    // Create the period chart
+    var periodChart = new Chart(periodCtx, {
+        type: 'line',
+        data: periodChartData,
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+</script>
+</div>
+</div>
+
+
+
+<!-- end chart one -->
+
+
+<!-- ======= chart Section ======= -->
+
+
+    <div class="col-md-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+
+                
+    <div class="section-title">
+        <h3>Patient Count Per Week </h3>
+    </div>
+
+    
+            <div class="col-md-12">
+                <canvas id="periodChart2"></canvas>
+            </div>
+
+            <br>
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr style="background: green; color: white;">
+                            
+                            {% for week_data in weeks_data %}
+                            <th>{{ week_data.week_start }} -  {{ week_data.week_end }}</th>
+                            {% endfor %}
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                            <tr>
+                                {% for week_data in weeks_data %}
+                                
+                                <td>{{ week_data.patient_count }}</td>
+                                {% endfor %}
+                            </tr>
+                        
+                    </tbody>
+                </table>
+                </div>
+        
+</div>
+
+<script>
+    // Define the period chart data using Django template tags
+    var periodChartData = {
+        labels: [{% for week_data in weeks_data %}'{{ week_data.week_start|date:"D, d M" }} - {{ week_data.week_end|date:"D, d M" }}',{% endfor %}],
+        datasets: [{
+            label: 'Period Chart',
+            data: [{% for week_data in weeks_data %}{{ week_data.patient_count }},{% endfor %}],
+            backgroundColor: 'rgba(0, 128, 0, 0.2)', // Adjust color as needed
+            borderColor: 'rgba(0, 128, 0, 0.2)', // Adjust color as needed
+            borderWidth: 2,
+            fill: 'start',
+            tension: 0.4 ,
+        }]
+    };
+
+    // Get the canvas element
+    var periodCtx = document.getElementById('periodChart2').getContext('2d');
+
+    // Create the period chart
+    var periodChart = new Chart(periodCtx, {
+        type: 'line',
+        data: periodChartData,
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+</script>
+</div>
+</div>
+</div>
+
+
+<!-- end chart one -->
+
+
+
+
+<!-- ======= chart Section ======= -->
+
+
+    <div class="col-md-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+
+                
+    <div class="section-title">
+        <h3>Patient Count Per Months</h3>
+    </div>
+
+    
+            <div class="col-md-12">
+                <canvas id="monthChart"></canvas>
+            </div>
+
+            <br>
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr style="background: green; color: white;">
+                            {% for month_data in months_data %}
+                            <th>{{ month_data.month_name }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                            <tr>
+                                {% for month_data in months_data %}
+                                
+                                <td>{{ month_data.patient_count }}</td>
+                                {% endfor %}
+                            </tr>
+                        
+                    </tbody>
+                </table>
+            </div>
+        
+</div>
+
+<script>
+    // Define the month chart data using Django template tags
+    var monthChartData = {
+        labels: [{% for month_data in months_data %}'{{ month_data.month_name }}',{% endfor %}],
+        datasets: [{
+            label: 'Month Chart',
+            data: [{% for month_data in months_data %}{{ month_data.patient_count }},{% endfor %}],
+            backgroundColor: 'rgba(0, 128, 0, 0.2)', // Adjust color as needed
+            backgroundColor: 'rgba(0, 128, 0, 0.2)', // Adjust color as needed
+            borderColor: 'rgba(0, 128, 0, 0.2)', // Adjust color as needed
+            borderWidth: 2,
+            fill: 'start',
+            tension: 0.4 ,
+        }]
+    };
+
+    // Get the canvas element for the month chart
+    var monthCtx = document.getElementById('monthChart').getContext('2d');
+
+    // Create the month chart
+    var monthChart = new Chart(monthCtx, {
+        type: 'line',
+        data: monthChartData,
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+</script>
+</div>
+</div>
+</div>
+</div>
+
+<!-- end chart one -->
+
+
+<div class="container">
+    
+
+    <div class="row">
+        <div class="col-md-6">
+            <canvas id="totalCostChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<script>
+    var totalCostData = {
+        labels: [{% for label in day_labels %}'{{ label }}',{% endfor %}],
+        datasets: [{
+            label: 'Total Cost',
+            data: [{% for cost in days_data %}{{ cost }},{% endfor %}],
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1
+        }]
+    };
+
+    var totalCostCtx = document.getElementById('totalCostChart').getContext('2d');
+
+    var totalCostChart = new Chart(totalCostCtx, {
+        type: 'bar',
+        data: totalCostData,
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+
+
+
+
+
+</div>
+
+{% endblock %}

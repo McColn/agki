@@ -1,0 +1,292 @@
+{% extends 'app/base2.html' %}
+{% block content %}
+
+
+
+
+
+<div class="container mt-4">
+    <br><br>
+    <div class="row">
+        <div class="col-lg-6">
+            <a href="{% url 'patient_count_per_period' %}"><button class="btn btn-success w-50">Patients</button></a>
+            
+        </div>
+        <div class="col-lg-6">
+            
+            <a href="{% url 'total_cost_per_period' %}"><button class="btn btn-success w-50">Sales</button></a>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+
+    <h5>Weekly Total Cost by Day</h5>
+   
+    
+    {% if days_data %}
+        <!-- Create a canvas element for the chart -->
+        <canvas id="totalCostChart" width="400" height="200"></canvas>
+
+      <br> 
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+                <tr style="background: green; color: white;">
+                 
+                    {% for day_entry in days_data %}
+                    <th>{{ day_entry.day_name }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+               
+                    <tr>
+                        {% for day_entry in days_data %}
+                        
+                        <td>{{ day_entry.total_cost }}</td>
+                        {% endfor %}
+                    </tr>
+                
+            </tbody>
+        </table>
+        </div>
+    
+        
+        <script>
+            // Extract data from Django context
+            var daysData = {{ days_data|safe }};
+            
+            // Extract day names and total costs for Chart.js
+            var labels = daysData.map(day => day.day_name);
+            var data = daysData.map(day => day.total_cost);
+
+            // Create a bar chart using Chart.js
+            var ctx = document.getElementById('totalCostChart').getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Total Cost',
+                        data: data,
+                        backgroundColor: 'rgba(0, 128, 0, 0.2)', // Adjust color as needed
+                        borderColor: 'rgba(0, 128, 0, 0.2)', // Adjust color as needed
+                        borderWidth: 2,
+                        fill: 'start',
+                        tension: 0.4 ,
+
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        </script>
+    {% else %}
+        <p>No prescriptions found for the current week.</p>
+    {% endif %}
+        </div>
+        </div>
+        </div>
+        </div>
+
+
+
+
+
+
+
+<div class="container mt-4">
+<div class="row">
+    <div class="col-md-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+       
+            <div class="section-title">
+                
+            </div>
+
+
+
+            <!-- ======= chart Section ======= -->
+            
+<div class="row">
+    <div class="col-md-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+
+                <div class="section-title">
+                    <h5>Total Cost Per Week</h5>
+                </div>
+
+                <div class="col-md-12">
+                    <canvas id="weekChart"></canvas>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Define the week chart data using Django template tags
+    var weekChartData = {
+        labels: [{% for week_data in weeks_data %}'{{ week_data.week_start|date:"M d" }} - {{ week_data.week_end|date:"M d" }}',{% endfor %}],
+        datasets: [{
+            label: 'Total Cost Per Week',
+            data: [{% for week_data in weeks_data %}{{ week_data.total_cost }},{% endfor %}],
+            backgroundColor: 'rgba(0, 128, 0, 0.2)', // Adjust color as needed
+            borderColor: 'rgba(0, 128, 0, 0.2)', // Adjust color as needed
+            borderWidth: 2,
+            fill: 'start',
+            tension: 0.4 ,
+        }]
+    };
+
+    // Get the canvas element for the week chart
+    var weekCtx = document.getElementById('weekChart').getContext('2d');
+
+    // Create the week chart
+    var weekChart = new Chart(weekCtx, {
+        type: 'line',
+        data: weekChartData,
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+</script>
+
+
+
+
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr style="background: green; color: white;">
+                            {% for week_data in weeks_data %}
+                            <th>{{ week_data.week_start }} to {{ week_data.week_end }}</th>
+                            {% endfor %}
+                           
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                            <tr>
+                                {% for week_data in weeks_data %}
+                                
+                                <td>{{ week_data.total_cost }}</td>
+                                {% endfor %}
+                            </tr>
+                        
+                    </tbody>
+                </table>
+            </div>
+
+            
+        </div>
+    </div>
+</div>
+</div>
+</div>
+            
+
+
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+
+
+    <h5>Yearly Total Cost by Month</h5>
+    
+    {% if months_data %}
+        <!-- Create a canvas element for the chart -->
+        <canvas id="monthlyTotalCostChart" width="400" height="200"></canvas>
+        
+        <!-- Display data in a table -->
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr style="background: green; color: white;">
+                        {% for month_entry in months_data %}
+                    <th>{{ month_entry.month_name }}</th>
+                        {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                
+                    <tr>
+                        {% for month_entry in months_data %}
+                        <td>{{ month_entry.total_cost }}</td>
+                        {% endfor %}
+                    </tr>
+                
+            </tbody>
+        </table>
+        </div>
+
+        <script>
+            // Extract data from Django context
+            var monthsData = {{ months_data|safe }};
+            
+            // Extract month names and total costs for Chart.js
+            var labels = monthsData.map(month => month.month_name);
+            var data = monthsData.map(month => month.total_cost);
+
+            // Create a line chart using Chart.js
+            var ctx = document.getElementById('monthlyTotalCostChart').getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'line', // Use 'line' for a line chart
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Total Cost',
+                        data: data,
+                        
+                        backgroundColor: 'rgba(0, 128, 0, 0.2)', // Adjust color as needed
+                        borderColor: 'rgba(0, 128, 0, 0.2)', // Adjust color as needed
+                        borderWidth: 2,
+                        fill: 'start',
+                        tension: 0.4 ,
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        </script>
+    {% else %}
+        <p>No prescriptions found for the current year.</p>
+    {% endif %}
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+
+
+
+
+
+{% endblock %}

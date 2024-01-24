@@ -1,0 +1,55 @@
+{% extends 'app/base2.html' %}
+{%block content%}
+
+
+
+
+
+        <br>
+        <div class="container">
+        <div class="col-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Basic form elements</h4>
+                    <a href="{% url 'patientList' %}"><button class='btn btn-outline-success btn-fw'>Patient list</button></a>   
+                    {% for message in messages %}
+                    <div class = "alert alert-success alert-dismissible fade show" role="alert">
+                        {{message}}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
+                    </div>
+                    {% endfor %}
+                    <p class="card-description">
+                      Basic form elements
+
+                    </p>
+                    <form method='POST' class="forms-sample" >
+                        {% csrf_token %}
+                        
+                      
+                      <div class="form-group">
+                        <label for="gender">Symptom from patient</label>
+                        <textarea class="form-control" rows="5" name="dalili" >{{s.dalili}}</textarea>
+                      </div>
+                      <div class="form-group">
+                        <label for="gender">Possible diseases to be tested</label>
+                        
+                        <textarea class="form-control" rows="5" name="possibleDiseases" >{{s.possibleDiseases}}</textarea>
+                      </div>
+                      
+                      
+                      
+                      
+                      
+                      <button type="submit" class="btn btn-success mr-2">Submit</button>
+                      
+                    </form>
+                    <a href="{% url 'patientDetail' id=s.id %}">
+                      <button class="btn btn-light">Cancel</button>
+                  </a>
+                </div>
+            </div>
+        </div>
+        </div>
+      
+
+{%endblock%}

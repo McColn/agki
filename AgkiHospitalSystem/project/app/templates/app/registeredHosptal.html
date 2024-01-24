@@ -1,0 +1,107 @@
+{% extends 'app/base2.html' %}
+{%block content%}
+
+<br>
+<div class="container mt-5">
+<div class="col-lg-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">HOSPITALI ZILIZOSAJILIWA</h4>
+
+        {% for message in messages %}
+        {{message}}
+        {% endfor %}
+        <p class="card-description">
+          {% comment %} Add class <code>.table-bordered</code> {% endcomment %}
+        </p>
+        {% if x %}
+        <div class="table-responsive">
+        
+          <table class="table table-bordered">
+            <thead>
+
+                    <tr>
+                        
+                        <th>hospital name</th>
+                        <th>level</th>
+                        <th>region</th>
+                        <th>district</th>
+                        <th>ward</th>
+                        <th>street</th>
+                        <th>System-selection</th>
+                        <th>Action</th>
+                        
+                        
+
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in x %}
+                    <tr>
+                        
+                        <td>{{i.name}}</td>
+                        <td>{{i.level}}</td>
+                        <td>{{i.region}}</td>
+                        <td>{{i.district}}</td>
+                        <td>{{i.ward}}</td>
+                        <td>{{i.street}}</td>
+                        <td>{{i.street}}</td>
+                        <td>
+                            <a href='{% url 'hospitalEdit' i.id %}'><button class='btn btn-primary btn-sm'>Edit<i class="fa fa-edit ml-1"></i></button></a>
+                            
+                            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal-2">Delete<i class="fa fa-trash ml-1"></i></button>
+                            <!-- Modal starts -->
+                  
+                            <div class="modal fade" id="exampleModal-2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel-2" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel-2">Alert</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    </div>
+                                    <div class="modal-body">
+                                    <p>Are you sure you want to delete {{i.name}}</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <a href='{% url 'hospitalDelete' i.id %}'><button type="button" class="btn btn-primary">Yes</button></a>
+                                    <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                  <!-- Modal Ends -->
+
+                        </td>
+                        
+
+
+
+                        
+
+                    </tr>
+                    {% endfor %}
+                    <!-- Add more rows as needed -->
+                </tbody>
+            </table>
+        </div>
+            {% else %}
+            <br>
+            <div class="alert alert-fill-primary" role="alert">
+                <i class="fa fa-exclamation-triangle"></i>
+                There! No hospital registered yet
+              </div>
+            {% endif %}
+        
+
+        <br>
+        <a href="{% url 'hospitalRegistration' %}"><button class="btn btn-primary">Add Hospital</button></a>
+      
+    </div>
+</div>
+</div>
+</div>
+{%endblock%}
+
+

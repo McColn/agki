@@ -1,0 +1,66 @@
+{% extends 'app/base2.html' %}
+{% block content %}
+<div class="container mt-12">
+    <div class="page-header">
+        <h3 class="page-title">
+          Received sms
+        </h3>
+    </div>
+    
+     {% if x %} 
+    {% for i in x %}
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card service-card">
+                <div class="card-body">
+                    <h5 class="card-title">{{i.jina}} - {{i.phone}} </h5>
+                    <p class="card-text">{{i.ujumbe}}</p>
+                    <button class="btn btn-social-icon btn-linkedin btn-rounded" data-toggle="modal" data-target="#exampleModal-2">
+                        <i class="fas fa-trash"></i>
+                    </button>
+
+
+                        <!-- Modal starts -->
+                  
+                            <div class="modal fade" id="exampleModal-2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel-2" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel-2">Alert</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    </div>
+                                    <div class="modal-body">
+                                    <p>Are you sure you want to delete</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <a href="{% url 'contactDelete' i.id %}"><button type="button" class="btn btn-primary">Yes</button></a>
+                                    <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                  <!-- Modal Ends -->
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% endfor %}
+
+    {% else %}
+            <br>
+            <div class="alert alert-fill-primary" role="alert">
+                <i class="fa fa-exclamation-triangle"></i>
+                There! No info yet
+              </div>
+    {% endif %}
+
+</div>
+ 
+        
+
+{% endblock %}

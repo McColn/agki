@@ -1,0 +1,49 @@
+{% extends 'app/base2.html' %}
+{%block content%}
+<br>
+<div class="container">
+<div class="col-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        
+        <h4 class="card-title">ADD NEW ARRIVAL DRUGS</h4>
+
+        {% for message in messages %}
+            <div class = "alert alert-success alert-dismissible fade show" role="alert">
+        {{message}}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
+            </div>
+
+            
+            {% endfor %}
+        
+        <form method="POST" class="forms-sample">
+            {% csrf_token %}
+            <div class="form-group">
+                 <label for="">Medicine name</label>
+                 <input type="text" name="medicineName" value="{{s.medicineName}}" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="">Amount</label>
+                <input type="text" name="amount" value="{{s.amount}}" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="">unitcost</label>
+                <input type="text" name="unitCost" value="{{s.unitCost}}" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="bio">Expire date:</label>
+                <input type="date" name="expireDate" value="expireDate" class="form-control"   required></textarea>
+            </div>             
+            <br>
+            <button type="submit" class="btn btn-success">Update</button>
+             
+         </form>
+
+        
+        <a href="{% url 'medicine' %}"><button class="btn btn-light">Cancel</button></a>
+        </div>      
+        </div>      
+    </div>      
+</div>
+{%endblock%}

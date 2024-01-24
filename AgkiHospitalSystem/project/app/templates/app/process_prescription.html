@@ -1,0 +1,51 @@
+{% extends 'app/base2.html' %}
+{% block content %}
+<div class="container bg-white p-5">
+  <h4 class="mt-5 mb-4 text-center bg-light p-3">Process Prescription for - <span class="text-success" style="text-transform: uppercase;">{{ patient.fullname }}</span></h4>
+  <form method="post">
+    {% csrf_token %}
+    {{ form }}
+    <br>
+    <br>
+    <div class="alert alert-fill-success" role="alert">
+        <i class="fa fa-exclamation-triangle"></i>
+        Select down here the medicine for a patient
+      </div>
+    {% for medicine in form.medicines.field.queryset %}
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" id="medicine_{{ medicine.id }}" name="medicines" value="{{ medicine.id }}">
+      <label class="form-check-label" for="medicine_{{ medicine.id }}">
+        {{ medicine.medicineName }}
+      </label>
+    </div>
+    <div class="form-group" id="dosage_cost_amount_{{ medicine.id }}" style="display: none;">
+      <label for="dosage_{{ medicine.id }}">Dosage for {{ medicine.medicineName }}:</label>
+      <input type="text" class="form-control" id="dosage_{{ medicine.id }}" name="dosage_{{ medicine.id }}" >
+      <!-- <label for="cost_{{ medicine.id }}">Cost for {{ medicine.medicineName }}:</label>
+      <input type="number" step="0.01" class="form-control" id="cost_{{ medicine.id }}" name="cost_{{ medicine.id }}" >
+       -->
+      <label for="amount_{{ medicine.id }}">Amount for {{ medicine.medicineName }}:</label>
+      <input type="number" step="0.01" class="form-control" id="amount_{{ medicine.id }}" name="amount_{{ medicine.id }}" >
+    </div>
+    {% endfor %}
+    <button type="submit" class="btn btn-success">Submit</button>
+  </form>
+  <br>
+  <a href="{% url 'patientDetail' id=patient.id %}" class="btn btn-secondary">Go back</a>
+</div>
+
+<script>
+  // Add event listeners to checkboxes to toggle visibility of dosage, cost, and amount fields
+  {% for medicine in form.medicines.field.queryset %}
+  document.getElementById('medicine_{{ medicine.id }}').addEventListener('change', function() {
+    var dosageCostAmountDiv = document.getElementById('dosage_cost_amount_{{ medicine.id }}');
+    if (this.checked) {
+      dosageCostAmountDiv.style.display = 'block';
+    } else {
+      dosageCostAmountDiv.style.display = 'none';
+    }
+  });
+  {% endfor %}
+</script>
+
+{% endblock %}

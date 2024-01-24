@@ -1,0 +1,66 @@
+{% extends 'app/base2.html' %}
+{%block content%}
+
+<br>
+<div class="container mt-5">
+
+<div class="col-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Medicine List</h4>
+        <a href="{% url 'medicineAdd' %}"><button class='btn btn-outline-success btn-fw'>Add medicine</button></a>         
+        
+        <div class="table-responsive">
+            {% if medicines %}
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                      
+                        <th>medicineName</th>
+                        <th>amount</th>
+                        <th>unitCost</th>
+                        <th>totalCost </th>
+                        <th>receivedDate</th>
+                        <th>expireDate</th>
+                        <th>RemainAmount</th>
+                        <th>Action</th>
+                        
+
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in medicines %}
+                    <tr>
+                        
+                        <td>{{i.medicineName}}</td>
+                        <td>{{i.amount}}</td>
+                        <td>{{i.unitCost}}</td>
+                        <td>{{i.totalCost}}</td>
+                        <td>{{i.receivedDate}}</td>
+                        <td>{{i.expireDate}}</td>
+                        <td>{{i.remainAmount }}</td>
+                        <td><a href="{% url 'medicineEdit' i.pk %}">edit</a></td>
+                        
+
+                    </tr>
+                    {% endfor %}
+                    <!-- Add more rows as needed -->
+                </tbody>
+            </table>
+            {% else %}
+            <br>
+            <div class="alert alert-fill-primary" role="alert">
+                <i class="fa fa-exclamation-triangle"></i>
+                There! No  medicine success yet
+              </div>
+            {% endif %}
+        </div>
+
+        <br>
+        <a href="{% url 'home' %}"><button class="btn btn-inverse-success btn-fw">Cancel</button></a>
+    </div>
+    </div>
+</div>
+</div>
+
+{%endblock%}

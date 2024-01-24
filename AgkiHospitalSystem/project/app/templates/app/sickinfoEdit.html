@@ -1,0 +1,18 @@
+{% extends 'app/base2.html' %}
+{%block content%}
+<div class="container">
+        {% comment %} <button class='btn btn-success'>Taarifa zako za awali</button> {% endcomment %}
+        <h4 class="card-title">ELEKEZA HOSPITALI SAHIHI</h4>
+        
+        <form method="POST" class="forms-sample">
+            {% csrf_token %}
+            {{form.as_p}}
+            <button type="submit" class="btn btn-success">submit</button>
+             
+         </form>
+
+        <br>
+        <a href="{% url 'sickinfolist' %}"><button class="btn btn-dark">Cancel</button></a>
+      
+</div>
+{%endblock%}

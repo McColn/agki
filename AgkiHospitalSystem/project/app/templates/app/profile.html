@@ -1,0 +1,96 @@
+
+{% extends 'app/base2.html' %}
+{% block content %}
+{% load static %}
+
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+
+    .profile-card {
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #ffffff;
+        box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .profile-image {
+        width: 100%;
+        height: auto;
+    }
+
+    .profile-content {
+        padding: 30px;
+    }
+
+    .profile-content h2 {
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+
+    .profile-content p {
+        font-size: 16px;
+        color: #555555;
+        margin-bottom: 5px;
+    }
+
+    .profile-fields {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    .profile-field {
+        flex: 0 0 50%;
+        padding: 10px;
+    }
+</style>
+
+
+
+    <center><h4>PROFILE</h4></center>
+    
+   
+    
+
+
+
+
+    <div class="container mt-5">
+        <div class="card profile-card">
+            
+            <div class="profile-content text-center">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>Name: {{user.first_name|title}}  {{user.last_name|title}}</h5>
+                    </div>
+                    <div class="col-md-6 text-right">
+                        <a href="{% url 'useredit' user.id %}" style="color: green;"><i class="fas fa-edit"></i></a>
+                    </div>
+                </div>
+                <hr>
+                <div class="profile-fields">
+                    <div class="profile-field">
+                        <p><strong>Username:</strong> {{user.username}}</p>
+                        <p><strong>Location:</strong> {{user.location}}</p>
+                    </div>
+                    <div class="profile-field">
+                        <p><strong>Age:</strong> {{user.age}}</p>
+                        <p><strong>Phone:</strong> {{user.phone}}</p>
+                    </div>
+                </div>
+                <div class="social-links mt-3">
+                    <a href="#" style="color: green;"><i class="fab fa-instagram"></i></a>
+                    <a href="#" style="color: green;"><i class="fab fa-twitter"></i></a>
+                    <a href="#" style="color: green;"><i class="fab fa-tiktok"></i></a>
+                    <a href="#" style="color: green;"><i class="fab fa-facebook"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+{% endblock %}

@@ -1,0 +1,562 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block content %}
+
+
+    <!-- HERO -->
+    {% for frontpage in frontpages %}
+    <section id="hero" class="min-vh-100 d-flex align-items-center text-center" style="background: linear-gradient(rgba(144, 238, 144, 0.507), rgba(46, 139, 87, 0.438)), url({{frontpage.image.url}})">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <h1 data-aos="fade-left" class="text-uppercase text-white fw-semibold display-1">{{frontpage.header}}</h1>
+                    <h5 class="text-white mt-3 mb-4" data-aos="fade-right">{{frontpage.body}}</h5>
+                    {% if user.is_doctor or user.is_laboratorist or user.is_receptionist or user.is_pharmacist %}
+                    <a href="{% url 'home' %}" class="btn btn-brand me-2">STAFF PAGE</a><br>
+                    {% else%}
+                    <div data-aos="fade-up" data-aos-delay="50">
+                        {% if user.is_authenticated %}
+                        <a href="{% url 'sickinfo' %}" class="btn btn-brand me-2">REPORT A DISEASE</a>
+                        {% else %}
+                        <a href="{% url 'signin' %}" class="btn btn-brand me-2">SIGN IN TO REPORT A DISEASE</a>
+                        {% endif %}
+                        <a href="#portfolio1" class="btn btn-light ms-2">Our Portfolio</a>
+                    </div>
+                    {% endif %}
+                    <br>
+                    {% if user.is_superuser %}
+                    <a href="{% url 'frontPageedit' frontpage.id %}" class="btn btn-brand me-2">EDIT</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+    {% endfor %}
+
+    <!-- FEATURED LOGOS -->
+    <section id="services" class="section-padding border-top ">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center" data-aos="fade-down" data-aos-delay="150">
+                    <div class="section-title">
+                        <h1 class="display-4 fw-semibold">Featured By</h1>
+                        <div class="line"></div>
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="row g-3 text-center">
+                <div class="col-lg-3 col-sm-6" data-aos="fade-down" data-aos-delay="150">
+                    <div class="service theme-shadow p-lg-5 p-4">
+                        <div class="iconbox">
+                            <img src="{% static 'app/images/sponsors/AFD.png' %}" alt="">
+                        </div>
+                        <h5 class="mt-4 mb-3">Agency French Development </h5>
+                        
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6" data-aos="fade-down" data-aos-delay="150">
+                    <div class="service theme-shadow p-lg-5 p-4">
+                        <div class="iconbox">
+                            <img src="{% static 'app/images/sponsors/HV-LOGO.jpg' %}" alt="">
+                        </div>
+                        <h5 class="mt-4 mb-3">Hindsight Venture</h5>
+                        
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6" data-aos="fade-down" data-aos-delay="150">
+                    <div class="service theme-shadow p-lg-5 p-4">
+                        <div class="iconbox">
+                            <img src="{% static 'app/images/sponsors/Sankalp.png' %}" alt="">
+                        </div>
+                        <h5 class="mt-4 mb-3">Sankalp Award</h5>
+                        
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6" data-aos="fade-down" data-aos-delay="150">
+                    <div class="service theme-shadow p-lg-5 p-4">
+                        <div class="iconbox">
+                            <img src="{% static 'app/images/sponsors/UNFPA.png' %}" alt="">
+                        </div>
+                        <h5 class="mt-4 mb-3">UNFPA climate hack lab</h5>
+                        
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6" data-aos="fade-down" data-aos-delay="150">
+                    <div class="service theme-shadow p-lg-5 p-4">
+                        <div class="iconbox">
+                            <img src="{% static 'app/images/sponsors/VillgroAfrica.png' %}" alt="">
+                        </div>
+                        <h5 class="mt-4 mb-3">Villgro Africa and Agency French Development {AFD}</h5>
+                        
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6" data-aos="fade-down" data-aos-delay="150">
+                    <div class="service theme-shadow p-lg-5 p-4">
+                        <div class="iconbox">
+                            <img src="{% static 'app/images/sponsors/UWEZOTZ.png' %}" alt="">
+                        </div>
+                        <h5 class="mt-4 mb-3">Uwezo Tanzania {Unreached Africa& Follow Her}</h5>
+                        
+                    </div>
+                </div>
+               
+                
+            </div>
+        </div>
+    </section>
+
+    <!-- VIDEO -->
+    <!-- <section id="about" class="section-padding">
+        <div class="container">
+            {% for video in videos %}
+                <div class="row justify-content-between align-items-center">
+                    <video class="video" src="{{ video.video_file.url }}" controls></video>
+                </div>
+                <br>
+                {% if user.is_superuser %}
+                <a href="{% url 'videoedit' video.id %}" class="btn btn-brand ms-lg-3">Change video</a>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </section> -->
+
+
+
+    <!-- why use agki -->
+    <section class="section-padding bg-light" id="contact">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center" data-aos="fade-down" data-aos-delay="150">
+                    <div class="section-title">
+                        <h1 class="display-4 text-white fw-semibold">Why use AGKI?</h1>
+                        <div class="line bg-white"></div>
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-center" data-aos="fade-down" data-aos-delay="250">
+                <div class="row g-3 text-center">
+                    {% for whyuseagki in whyuseagkis %}
+                    <div class="col-md-6">
+                      <div class="card mb-4" style="border-radius: 5px;">
+                        <div class="card-body">
+                          
+                          <div>
+                            <h5 class="card-title">{{whyuseagki.header}}</h5>
+                            <p class="card-text">{{whyuseagki.body}}</p>
+                            
+                          </div>
+                        </div>
+                        {% if user.is_superuser %}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <a href="{% url 'whyuseagkiedit' whyuseagki.id %}" class="btn btn-light ms-lg-3">Edit</a>
+                            </div>
+                            <div class="col-md-6">
+                                <a href="{% url 'whyuseagkidelete' whyuseagki.id %}" class="btn btn-light ms-lg-3">Delete</a>
+                            </div>
+                        </div>
+                        
+                        
+                        {% endif %}
+                      </div>
+                      
+                    </div>
+                    {% endfor %}
+                    
+                    
+                </div>
+            </div>
+            {% if user.is_superuser %}
+                <a href="{% url 'whyuseagkiadd' %}" class="btn btn-brand ms-lg-3">+ Add New</a>
+                {% endif %}
+        </div>
+    </section>
+
+
+    <!-- our SERVICES -->
+    <section id="services" class="section-padding border-top">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center" data-aos="fade-down" data-aos-delay="150">
+                    <div class="section-title">
+                        <h1 class="display-4 fw-semibold">Our Services</h1>
+                        <div class="line"></div>
+                        <p>We offer wide range of services including this below</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row g-4 text-center">
+                {% for service in services %}
+                <div class="col-lg-4 col-sm-6" data-aos="fade-down" data-aos-delay="150">
+                    <div class="service theme-shadow p-lg-5 p-4">
+                        <div class="iconbox">
+                            <i class="ri-pen-nib-fill"></i>
+                        </div>
+                        <h5 class="mt-4 mb-3">{{service.header}}</h5>
+                        <p>{{service.body}}</p>
+                        {% if user.is_superuser %}
+                        <a href="{% url 'serviceedit' service.id %}" class="btn btn-brand ms-lg-3">Edit</a>
+                        <a href="{% url 'servicedelete' service.id %}" class="btn btn-brand ms-lg-3">Delete</a>
+                        {% endif %}
+                    </div>
+                    
+                </div>
+                
+                {% endfor %}
+                {% if user.is_superuser %}
+                <a href="{% url 'serviceadd' %}" class="btn btn-brand ms-lg-3">+ Add New Service</a>
+                {% endif %}
+               
+                
+            </div>
+        </div>
+    </section>
+
+    
+    <!-- REVIEW FROM TWITTER  -->
+    <section id="reviews" class="section-padding bg-light">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center" data-aos="fade-down" data-aos-delay="150">
+                    <div class="section-title">
+                        <h1 class="display-4 fw-semibold">Here what people say</h1>
+                        <div class="line"></div>
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="row gy-5 gx-4">
+
+
+                {% for review in reviews %}
+                <div class="col-lg-6 col-sm-6" data-aos="fade-down" data-aos-delay="250">
+                    
+                        <div class="post">
+                            <a href="https://x.com/CornelOnesmo/status/1734963265690566687?t=EQqPYbQeZ4vFvBTMuenlNg&s=09" style="text-decoration: none; color: black;">
+                            <div class="post-header" style="border-bottom: none; ">
+                                <img src="{{ review.image.url }}" alt="User Profile">
+                                <div class="user-info">
+                                    <h6 class="mb-0">{{review.name}}</h6>
+                                    <small class="text-muted">@{{review.username}}</small>
+                                </div>
+                                <button class="btn btn-link"><i class="fa-brands fa-x-twitter"></i></button>
+                            </div>
+                            <div class="post-body">
+                                <p>
+                                    {{review.body}}
+                                </p>
+                                <span class="posted-time">{{review.time_posted}}. {{review.views}}</span>
+                            </div>
+                            <div class="post-actions" style="border-top: none; ">
+                                <div>
+                                    <button class="like-icon"><i class="fa-regular fa-heart"></i>{{review.likes}}</button>
+                                    <button class="comment-icon"><i class="fa-regular fa-comment"></i> {{review.comments}}</button>
+                                    <button class="share-icon"><i class="fas fa-retweet"></i>{{review.share}}  </button>
+                                    
+                                    <button class="bookmark-icon"><i class="fa-regular fa-bookmark"></i></button>
+                                    
+                
+                                </div>
+                                <button class="btn btn-link"><i class="fa-solid fa-arrow-up-from-bracket"></i></button>
+                            </div>
+                            </a>
+                            <div class="post-actions" style="border-top: none; ">
+                                {% if user.is_superuser %}
+                            <a href="{% url 'reviewedit' review.id %}"><button class="btn btn-primary">Edit review</button></a>
+                            <a href="{% url 'reviewdelete' review.id %}"><button class="btn btn-primary">Delete review</button></a>
+                            {% endif %}
+                            </div>
+                        </div>
+                    
+                    
+                </div>
+                
+                {% endfor %}
+                
+            </div>
+            {% if user.is_superuser %}
+            <a href="{% url 'reviewadd' %}" class="btn btn-brand ms-lg-3">+ Add Review</a>
+            {% endif %}
+            </div>
+        </div>
+    </section>
+
+
+    <!-- PORTFOLIO -->
+    <section id="portfolio1" class="section-padding">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center" data-aos="fade-down" data-aos-delay="150">
+                    <div class="section-title">
+                        <h1 class="display-4 fw-semibold">Our Portfolio</h1>
+                        <div class="line"></div>
+                        
+                    </div>
+                </div>
+            </div>
+            {% for portfolio in portfolios %}
+            <div class="row g-4">
+                <div class="col-md-4" data-aos="fade-down" data-aos-delay="150">
+                    <div class="portfolio-item image-zoom">
+                        <div class="image-zoom-wrapper">
+                            {% if user.is_superuser %}
+                            <button class="btn btn-light delete-button">
+                                1
+                            </button>
+                            {% endif %}
+                            <img src="{{portfolio.image1.url}}" alt="">
+                        </div>
+                        <a href="{{portfolio.image1.url}}" data-fancybox="gallery" class="iconbox"><i class="ri-search-2-line"></i></a>
+                    </div>
+                    <div class="portfolio-item image-zoom mt-4">
+                        <div class="image-zoom-wrapper">
+                            {% if user.is_superuser %}
+                            <button class="btn btn-light delete-button">
+                                2
+                            </button>
+                            {% endif %}
+                            <img src="{{portfolio.image2.url}}" alt="">
+                        </div>
+                        <a href="{{portfolio.image2.url}}" data-fancybox="gallery" class="iconbox"><i class="ri-search-2-line"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-down" data-aos-delay="250">
+                    <div class="portfolio-item image-zoom">
+                        <div class="image-zoom-wrapper">
+                            {% if user.is_superuser %}
+                            <button class="btn btn-light delete-button">
+                                3
+                            </button>
+                            {% endif %}
+                            <img src="{{portfolio.image3.url}}" alt="">
+                        </div>
+                        <a href="{{portfolio.image3.url}}" data-fancybox="gallery" class="iconbox"><i class="ri-search-2-line"></i></a>
+                    </div>
+                    <div class="portfolio-item image-zoom mt-4">
+                        <div class="image-zoom-wrapper">
+                            {% if user.is_superuser %}
+                            <button class="btn btn-light delete-button">
+                                4
+                            </button>
+                            {% endif %}
+                            <img src="{{portfolio.image4.url}}" alt="">
+                        </div>
+                        <a href="{{portfolio.image4.url}}" data-fancybox="gallery" class="iconbox"><i class="ri-search-2-line"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-down" data-aos-delay="350">
+                    <div class="portfolio-item image-zoom">
+                        <div class="image-zoom-wrapper">
+                            {% if user.is_superuser %}
+                            <button class="btn btn-light delete-button">
+                                5
+                            </button>
+                            {% endif %}
+                            <img src="{{portfolio.image5.url}}" alt="">
+                        </div>
+                        <a href="{{portfolio.image5.url}}" data-fancybox="gallery" class="iconbox"><i class="ri-search-2-line"></i></a>
+                    </div>
+                    <div class="portfolio-item image-zoom mt-4">
+                        <div class="image-zoom-wrapper">
+                            {% if user.is_superuser %}
+                            <button class="btn btn-light delete-button">
+                                6
+                            </button>
+                            {% endif %}
+                            <img src="{{portfolio.image6.url}}" alt="">
+                        </div>
+                        <a href="{{portfolio.image6.url}}" data-fancybox="gallery" class="iconbox"><i class="ri-search-2-line"></i></a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            <br>
+            {% if user.is_superuser %}
+                {% for portfolio in portfolios %}
+                    {% if portfolio.id %}
+                        <a href="{% url 'portfolioedit' pk=portfolio.id %}" class="btn btn-brand ms-lg-3">Edit Portfolio</a>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        </div>
+        
+    </section>
+
+    <!-- TEAM -->
+    <section id="team" class="section-padding">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center" data-aos="fade-down" data-aos-delay="150">
+                    <div class="section-title">
+                        <h1 class="display-4 fw-semibold">Team Members</h1>
+                        <div class="line"></div>
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="row g-4 text-center ">
+               
+                {% for team in teams %}
+                <div class="col-md-3" data-aos="fade-down" data-aos-delay="150">
+                    <div class="team-member image-zoom">
+                        <div class="image-zoom-wrapper">
+                            {% if user.is_superuser %}
+                            <button class="btn btn-light delete-button">
+                                <a href="{% url 'useredit' team.id %}"><i class="fas fa-pencil-alt"></i></a>
+                            </button>
+                            {% endif %}
+                            {% if team.image %}
+                            <img src="{{ team.image.url }}" alt="">
+                            {% else %}
+                            <img src="{% static 'app/ttt.jpg' %}" alt="">
+                            {% endif %}
+                        </div>
+                        <div class="team-member-content">
+                            <h4 class="text-white">{{team.first_name}} {{team.last_name}}</h4>
+                            <p class="mb-0 text-white">{{team.position}}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                
+            </div>
+        </div>
+    </section>
+
+    <!-- MAP / COUNTER -->
+    <section id="counter" class="section-padding">
+        <div class="col-12 text-center" data-aos="fade-down" data-aos-delay="150">
+            <div class="section-title">
+                <h1 class="display-4 text-black fw-semibold">Get in touch</h1>
+                <div class="line bg-black"></div>
+            </div>
+        </div>
+        <iframe style="border:0; width: 100%; height: 350px;" 
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5164.308037170913!2d38.849879976077744!3d-6.742222165927443!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x185c65a85df9799f%3A0xd8c21caaf535e5d8!2sKbh!5e1!3m2!1sen!2stz!4v1699008580826!5m2!1sen!2stz" frameborder="0" allowfullscreen>
+        </iframe>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="section-padding bg-light" id="contact1">
+        <div class="container">
+            <div class="row justify-content-center" data-aos="fade-down" data-aos-delay="250">
+                <div class="col-lg-8">
+                    <form action="#" class="row g-3 p-lg-5 p-4 bg-white theme-shadow">
+                        <div class="form-group col-lg-6">
+                            <input type="text" class="form-control" placeholder="Enter first name">
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <input type="text" class="form-control" placeholder="Enter last name">
+                        </div>
+                        <div class="form-group col-lg-12">
+                            <input type="text" class="form-control" placeholder="Enter subject">
+                        </div>
+                        <div class="form-group col-lg-12">
+                            <textarea name="message" rows="5" class="form-control" placeholder="Enter Message"></textarea>
+                        </div>
+                        <div class="form-group col-lg-12 d-grid">
+                            <button class="btn btn-brand">Send Message</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQS -->
+    <section id="blog1" class="section-padding">
+        <div class="container">
+            <center>
+            <h3 class="logo-heading"> FAQS</h3>
+            <h4 class="logo-heading"> App support, advice and answers from the AGKI Team.</h4><br>
+            </center>
+            {% for faq in faqs %}
+    <div class="single">
+        <h5 class="clickable" onclick="toggleDescription('description{{ forloop.counter }}')">
+            {{ faq.question }}
+        </h5>
+        <div id="description{{ forloop.counter }}" class="description">
+            <p>{{ faq.answer }}</p>
+            {% if user.is_superuser %}
+                <div style="cursor: pointer;">
+                    <a href="{% url 'faqedit' faq.id %}"><i class="fas fa-pencil-alt"></i></a>
+                    <span> -- </span>
+                    <a href="{% url 'faqdelete' faq.id %}"><i class="fas fa-trash-alt"></i></a>
+                    
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endfor %}
+
+
+
+            {% if user.is_superuser %}
+            <a href="{% url 'faqadd' %}" class="btn btn-brand ms-lg-3">Add Faq</a>
+            {% endif %}
+
+            
+              </div>
+    </section>
+
+    
+
+    <!-- BLOG -->
+    <section id="blog" class="section-padding">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center" data-aos="fade-down" data-aos-delay="150">
+                    <div class="section-title">
+                        <h1 class="display-4 fw-semibold">Recent News & Articles</h1>
+                        <div class="line"></div>
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                {% for new in news %}
+                <div class="col-md-4" data-aos="fade-down" data-aos-delay="150">
+                    <div class="team-member image-zoom">
+                        <div class="image-zoom-wrapper">
+                            {% if user.is_superuser %}
+                            <button class="btn btn-light delete-button">
+                                <a href="{% url 'newsedit' new.id %}"><i class="fas fa-pencil-alt"></i></a> ||
+                                <a href="{% url 'newsdelete' new.id %}"><i class="fas fa-trash-alt"></i></a>
+                            </button>
+                            {% endif %}
+                            <img src="{{new.image.url}}" alt="">
+                        </div>
+                        <h5 class="mt-4">{{new.header}}</h5>
+                        <p>{{new.body}}.</p>
+                        <!-- <a href="#">Read More</a> -->
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% if user.is_superuser %}
+            <a href="{% url 'news' %}" class="btn btn-brand ms-lg-3">+ Add News</a>
+            {% endif %}
+        </div>
+    </section>
+
+    
+
+
+    <script>
+      function toggleDescription(descriptionId) {
+        var description = document.getElementById(descriptionId);
+        if (description.style.display === 'none' || description.style.display === '') {
+          description.style.display = 'block';
+        } else {
+          description.style.display = 'none';
+        }
+      }
+    </script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
+    
+{% endblock %}

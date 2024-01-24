@@ -1,0 +1,47 @@
+
+{% extends 'app/base2.html' %}
+{%block content%}
+<br>
+<div class="container">
+<div class="col-12 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Basic form elements</h4>
+            <p class="card-description">
+              Basic form elements
+            </p>
+            <form class="forms-sample" method='POST'>
+                {% csrf_token %}
+              <div class="form-group">
+                <label for="name">Name of hospital</label>
+                <input type="text" class="form-control" name="name" value="{{s.name}}">
+              </div>
+              <div class="form-group">
+                <label for="location">Location of hospital</label>
+                <input type="text" class="form-control" name="location" value="{{s.location}}">
+              </div>
+              
+              <div class="form-group">
+                <label for="level">Hospital level</label>
+                  <select class="form-control" name="level" value="{{s.level}}">
+                    <option>------</option>
+                    <option>Zahanati</option>
+                    <option>pharmacr</option>
+                    <option>wilaya</option>
+                  </select>
+                </div>
+              
+              
+              
+              <button type="submit" class="btn btn-primary mr-2">Submit</button>
+              
+            </form>
+            <a href="{% url 'registeredHosptal' %}"><button class="btn btn-light">Cancel</button></a>
+        </div>
+    </div>
+</div>
+</div>       
+        
+      
+
+{%endblock%}

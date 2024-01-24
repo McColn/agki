@@ -1,0 +1,90 @@
+{% extends 'app/base2.html' %}
+{%block content%}
+
+        <br>
+        <div class="container mt-5">
+        <div class="col-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Medicine Add Form</h4> 
+
+                    {% for message in messages %}
+                        <div class = "alert alert-success alert-dismissible fade show" role="alert">
+                            {{message}}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
+                        </div>
+                    {% endfor %}
+
+                    {% if form.errors %}
+                        <div class="alert alert-danger">
+                        <strong>Error:</strong> Please correct the errors below.
+                        <ul>
+                            {% for field, errors in form.errors.items %}
+                            <li>{{ field }}: {{ errors.0 }}</li>
+                            {% endfor %}
+                        </ul>
+                        </div>
+                    {% endif %}
+
+                    <form method='POST' class="forms-sample" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                      <div class="form-group">
+                        <label for="name">Name of medicine:</label>
+                        <input type="text" class="form-control" name="title" value="{{s.title}}">
+                      </div>
+                      
+                      <div class="form-group">
+                        <label for="address">slug (type same as name)</label>
+                        <input type="text" class="form-control" name="slug" value="{{s.slug}}"
+                      </div>
+
+                      <div class="form-group">
+                        <label for="{{ form.category.id_for_label }}">Category:</label>
+                        {{ form.category }}
+                      </div>
+
+                      <div class="form-group">
+                        <label for="name">Price:</label>
+                        <input type="text" class="form-control" name="price" value="{{s.price}}">
+                      </div>
+                      <div class="form-group">
+                        <label for="name">Discount Price:</label>
+                        <input type="text" class="form-control" name="discount_price" value="{{s.discount_price}}">
+                      </div>
+                      
+                      <div class="form-group">
+                        <label for="gender">description</label>
+                        <input type="text" class="form-control" name="description" value="{{s.description}}">
+                      </div>
+                      <div class="form-group">
+                        <label for="image">Select Image (recomended size 600x600 px):</label>
+                        <input type="file" class="form-control" name="image">
+                        <br>
+                      </div>
+                      <p>Manufactured Date: {{ s.manufactured_date }}</p>
+                        <div class="form-group">
+                            <label for="gender">Manufactured-date</label>
+                            <input type="date" class="form-control" name="manufactured_date" value="{{ s.manufactured_date }}">
+                        </div>
+                        <p>Manufactured Date: {{ s.expire_date }}</p>
+                      <div class="form-group">
+                        <label for="gender">Expire-date</label>
+                        <input type="date" class="form-control" name="expire_date" value="{{s.expire_date}}">
+                      </div>
+
+                      <!-- <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="is_patient" {% if s.is_patient %}checked{% endif %}>
+                        <label class="form-check-label" for="is_patient">Is Patient</label>
+                      </div> -->
+                      
+                      <button type="submit" class="btn btn-success mr-2">Submit</button>
+                      
+                    </form>
+                    <!-- <a href="{% url 'medicationDescriptionStaff' s.id %}"><button class="btn btn-light">Cancel</button></a> -->
+                </div>
+            </div>
+        </div>
+      </div>
+
+{%endblock%}

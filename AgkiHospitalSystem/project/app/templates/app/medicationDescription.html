@@ -1,0 +1,75 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block content %}
+
+    <section id="blog" class="section-padding">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6" data-aos="fade-down" data-aos-delay="150">
+                    <div class="team-member image-zoom">
+                        <div class="image-zoom-wrapper">
+                            {% if user.is_superuser %}
+                            <button class="btn btn-light delete-button">
+                                <a href="{% url 'newsedit' x.id %}"><i class="fas fa-pencil-alt"></i></a> ||
+                                <a href="{% url 'newsdelete' x.id %}"><i class="fas fa-trash-alt"></i></a>
+                            </button>
+                            {% endif %}
+                            <img src="{{x.image.url}}" alt="">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 d-flex align-items-center" data-aos="fade-down" data-aos-delay="150">
+                    <div class="team-member image-zoom ">
+                                <h2 class="mt-4">{{x.title}}</h2>
+                                
+                                <h5><b>Tsh.{{x.discount_price}}/=.</b></h5>
+                                <p><del>Tsh.{{x.price}}/=.</del></p>
+                                <h6>{{x.description}}</h6>
+                                <p>seller: {{x.user}}</p>
+                                <p>Number of Dosage</p>
+                                
+                                    <div class="btn-group">
+                                      <button type="button" class="btn btn-secondary" id="decreaseBtn">-</button>
+                                      <button type="button" class="btn btn-secondary" id="numberBtn">1</button>
+                                      <button type="button" class="btn btn-secondary" id="increaseBtn">+</button>
+                                    </div>
+                                <div class="mt-2">
+                                    <a href="{{x.get_add_to_cart_url}}">
+                                        <button class="btn btn-info" style="background-color: green;color: #fff;">Add to Cart</button>
+                                    </a>
+                                </div>
+                    </div>
+                </div>
+
+                
+               
+            </div>
+            
+        </div>
+    </section>
+
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          // Get the number button
+          var numberBtn = document.getElementById('numberBtn');
+        
+          // Add event listener for increase button
+          document.getElementById('increaseBtn').addEventListener('click', function() {
+            numberBtn.innerHTML = parseInt(numberBtn.innerHTML, 10) + 1;
+          });
+        
+          // Add event listener for decrease button
+          document.getElementById('decreaseBtn').addEventListener('click', function() {
+            var currentNumber = parseInt(numberBtn.innerHTML, 10);
+            if (currentNumber > 1) {
+              numberBtn.innerHTML = currentNumber - 1;
+            }
+          });
+        });
+    </script>
+
+{% endblock %}
+

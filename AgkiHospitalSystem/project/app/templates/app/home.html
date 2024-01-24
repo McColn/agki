@@ -1,0 +1,332 @@
+{% extends 'app/base2.html' %}
+{% block content %}
+{% load static %}
+{% load i18n %}
+
+
+<div class="container mt-5">
+
+
+
+  {% if user.is_receptionist  or user.is_doctor or user.is_laboratorist or user.is_pharmacist %}
+    <!-- <div class="page-header">
+        <h3 class="page-title">
+          Dashboard
+        </h3>
+    </div> -->
+      <div class="row grid-margin">
+        <div class="col-12">
+          <div class="card card-statistics">
+            <div class="card-body" style="background:  darkgreen;">
+              <div class="d-flex flex-column flex-md-row align-items-center justify-content-between">
+                  <div class="statistics-item">
+                    <a class="nav-link" href="{% url 'userlist' %}" style="color:white;">
+                    <p>
+                      <i class="icon-sm fa fa-user mr-2"></i>
+                      Total users
+                    </p>
+                    <center><h2>{{registered_total}}</h2></center>
+                  </a>
+                  </div>
+                  <div class="statistics-item">
+                    <a class="nav-link" href="{% url 'sickinfolist' %}" style="color:white;">
+                    <p>
+                      
+                      <i class="icon-sm fas fa-stethoscope mr-2"></i>
+                      New far patient
+                    </p>
+                    <center> <h2>{{newsick_total}}</h2></center>
+                    </a>
+                  </div>
+                  <div class="statistics-item">
+                    <a class="nav-link" href="{% url 'registeredHosptal' %}" style="color:white;">
+                    <p>
+                      <i class="icon-sm fas fa-hospital mr-2"></i>
+                      Registered hospital
+                    </p>
+                    <center> <h2>{{hospital_total}}</h2></center>
+                  </a>
+                  </div>
+                  <div class="statistics-item">
+                    <a class="nav-link" href="{% url 'contact_list' %}" style="color:white;">
+                    <p>
+                      <i class="icon-sm fas fa-paper-plane mr-2"></i>
+                      New messages
+                    </p>
+                    <center> <h2>{{jumbe_total}}</h2></center>
+                  </a>
+                  </div>
+                  <div class="statistics-item">
+                    <p>
+                      <i class="icon-sm fas fa-medkit mr-2"></i>
+                      Today agki patient
+                    </p>
+                    <center> <h2>{{today_total_patients}}</h2></center>
+                   
+                  </div>
+                  <div class="statistics-item">
+                    <p>
+                      <i class="icon-sm fas fa-wheelchair mr-2"></i>
+                      Total agki patient
+                    </p>
+                    <center> <h2>{{overall_total_patients}}</h2></center>
+                   
+                  </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <div class="row grid-margin">
+      <div class="col-12">
+        <div class="card card-statistics bg-success" style="background:  darkgreen;">
+          <div class="card-body">
+            <div class="d-flex flex-column flex-md-row align-items-center justify-content-between">
+                <div class="statistics-item">
+                  
+                  <p>
+                    <i class="icon-sm fa fa-user mr-2"></i>
+                    Day total cost
+                  </p>
+                  <center><h2>{{day_total_cost}}</h2></center>
+                
+                </div>
+                <div class="statistics-item">
+                  <p>
+                    
+                    <i class="icon-sm fas fa-stethoscope mr-2"></i>
+                    week_total_cost
+                  </p>
+                  <center> <h2>{{week_total_cost}}</h2></center>
+                  
+                </div>
+                <div class="statistics-item">
+                  <p>
+                    <i class="icon-sm fas fa-hospital mr-2"></i>
+                    month_total_cost
+                  </p>
+                  <center> <h2>{{month_total_cost}}</h2></center>
+                
+                </div>
+                <div class="statistics-item">
+                  <p>
+                    <i class="icon-sm fas fa-paper-plane mr-2"></i>
+                    year_total_cost
+                  </p>
+                  <center> <h2>{{year_total_cost}}</h2></center>
+                
+                </div>
+                
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+
+   {% endif %} 
+
+  
+ 
+
+
+
+      
+<br>
+
+
+
+</div>
+
+
+      
+<!-- 
+      
+{% if user.is_receptionist  or user.is_doctor or user.is_laboratorist or user.is_pharmacist %}
+    
+      
+       <br>
+    <section id="doctors" class="doctors">
+      <div class="container">
+
+        <div class="section-title">
+          <h2>Staff</h2>
+          </div>
+
+        <div class="row">
+
+            {% for i in x %}
+          <div class="col-lg-6 mt-4">
+            <div class="member d-flex align-items-start">
+              <div class="pic">
+                {% if i.image %}
+                <img src="{{ i.image.url }}" class="img-fluid" alt="">
+                {% else %}
+                <img src="{% static 'app/doctors/default.jpg' %}" class="img-fluid" alt="">
+                {% endif %}
+              </div>
+              <div class="member-info">
+                <br>
+                <br>
+                <br>
+                <h4>{{i.username}} {{i.lastname}}</h4>
+                <span>{{i.department.name}}</span>
+                
+                
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+
+      </div>
+    </section>
+
+{% endif %}
+
+  
+
+    <br>
+      <div class="card">
+    <section id="contact" class="contact">
+      <div class="container">
+
+        <div class="section-title">
+          <h2>{% trans "Contact" %}</h2>
+           </div>
+      </div>
+
+      <div>
+        <iframe style="border:0; width: 100%; height: 350px;" 
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5164.308037170913!2d38.849879976077744!3d-6.742222165927443!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x185c65a85df9799f%3A0xd8c21caaf535e5d8!2sKbh!5e1!3m2!1sen!2stz!4v1699008580826!5m2!1sen!2stz" frameborder="0" allowfullscreen></iframe>
+      </div>
+      <div class="container">
+        <div class="row mt-5">
+
+          <div class="col-lg-4">
+            <div class="info">
+              <div class="address">
+                <i class="bi bi-geo-alt"></i>
+                <h4>{% trans "Location:" %}</h4>
+                <p>A108 kongowe</p>
+              </div>
+
+              <div class="email">
+                <i class="bi bi-envelope"></i>
+                <h4>{% trans "Email:" %}</h4>
+                <p>info@agki.com</p>
+              </div>
+
+              <div class="phone">
+                <i class="bi bi-phone"></i>
+                <h4>{% trans "Call:" %}</h4>
+                <p>+255 777 777 777</p>
+              </div>
+
+            </div>
+
+          </div>
+
+          <div class="col-lg-8 mt-5 mt-lg-0">
+
+            <form  method="POST">
+              {% csrf_token %}
+              <div class="row">
+                <div class="col-md-6 form-group">
+                  <input type="text" name="jina" class="form-control" placeholder="{% trans 'Your full name' %}" required>
+                </div>
+                <div class="col-md-6 form-group mt-3 mt-md-0">
+                  <input type="text" class="form-control" name="phone"  placeholder="{% trans 'Your phone number' %}" required>
+                </div>
+              </div>
+             
+              <div class="form-group mt-3">
+                <textarea class="form-control" name="ujumbe" rows="5" placeholder="{% trans 'message content' %}" required></textarea>
+              </div>
+              
+              <div class="text-center"><button type="submit" class="btn btn-primary">{% trans 'Send Message' %}</button></div>
+            </form>
+            <br>
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+    
+    </section> -->
+
+
+
+      <footer class="footer">
+        <div class="d-sm-flex justify-content-center justify-content-sm-between">
+          <span class="text-muted text-center text-sm-left d-block d-sm-inline-block"> 2023</span>
+          <!-- <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">
+            Developer: McColn  
+            <a href="https://instagram.com/cornelmtavangu" style="color: #007bff;">
+              <i class="fab fa-instagram"></i>
+            </a>
+            <a href="https://facebook.com/cornelmtavangujr"  style="color: #007bff;">
+              <i class="fab fa-facebook-f"></i>
+            </a>
+            <a href="https://twitter.com/cornelmtavangu"  style="color: #007bff;">
+              <i class="fab fa-twitter"></i>
+            </a>
+          </span> -->
+        </div>
+      </footer>
+
+
+<!-- <footer class="text-light">
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-md-3">
+                <h5>{% trans "SERVICES" %}</h5>
+                <ul class="list-unstyled">
+                    <li>upasuaji</li>
+                    <li>uzazi</li>
+                    <li>watoto</li>
+                    <li>wajawazito</li>
+                    <li>uvimbe</li>
+                </ul>
+            </div>
+            <div class="col-md-3">
+                <h5>{% trans "INFORMATION" %}</h5>
+                <ul class="list-unstyled">
+                    
+                    <li>About us</li>
+                    <li>Press room</li>
+                    
+                </ul>
+            </div>
+            <div class="col-md-3">
+                
+                <h5>{% trans "SUPPORT" %}</h5>
+                <ul class="list-unstyled">
+                    <li>FAQ</li>
+                    <li>Contact</li>
+                </ul>
+            </div>
+            <div class="col-md-3">
+                <h5>{% trans "SOCIAL MEDIA" %}</h5>
+                
+                <ul class="list-inline">
+                    <li class="list-inline-item"><a href="#">Facebook</a></li>
+                    <li class="list-inline-item"><a href="#">Twitter</a></li>
+                    <li class="list-inline-item"><a href="#">Instagram</a></li>
+               
+                </ul>
+            </div>
+        </div>
+    </div>
+</footer> -->
+
+
+    
+</div>
+    
+<script src="{% static 'app/js/chart.js' %}"></script>       
+<script src="{% static 'app/js/chartist.js' %}"></script>       
+
+{% endblock %}

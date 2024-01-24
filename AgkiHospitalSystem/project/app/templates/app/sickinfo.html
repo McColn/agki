@@ -1,0 +1,216 @@
+{% load static %}
+{% load i18n %}
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AGKI Dispensary</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Clash+Display&display=swap">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/90ee3bc580.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css">
+    
+    <link rel="stylesheet" href="{% static 'app/videos/index.css' %}">
+    <style>
+        .image-zoom-wrapper {
+            position: relative;
+        }
+    
+        .delete-button {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 1; /* Ensure the button is above the image */
+        }
+        .post {
+            border: 1px solid #dddfe2;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+        }
+
+        .post-header {
+            padding: 12px 16px;
+            border-bottom: 1px solid #dddfe2;
+            display: flex;
+            align-items: center;
+        }
+
+        .post-header img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 12px;
+        }
+
+        .post-header .user-info {
+            flex-grow: 1;
+        }
+
+        .post-body {
+            padding: 16px;
+            line-height: 1.6;
+        }
+
+        .post-actions {
+            padding: 12px 16px;
+            border-top: 1px solid #dddfe2;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .post-actions button {
+            border: none;
+            background-color: transparent;
+            cursor: pointer;
+            color: #385898;
+        }
+
+        .post-actions button:hover {
+            text-decoration: underline;
+        }
+
+        .like-icon i {
+            color: black;
+        }
+
+        .comment-icon,
+        .share-icon {
+            margin-left: 16px;
+        }
+
+        .posted-time {
+            font-size: 12px;
+            color: #aaa;
+        }
+    </style>
+    
+    
+</head>
+
+<body data-bs-spy="scroll" data-bs-target=".navbar">
+
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg bg-white sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'index' %}">
+                <!-- <img src="./assets/images/logo-dark.svg" alt=""> -->
+                <h2>AGKI.</h2>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'index' %}">Home</a>
+                    </li>
+                    
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'signout' %}">Signout</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'signin' %}">Signin</a>
+                    </li>
+                    {% endif %}
+                    {% if user.is_superuser %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'home' %}">Staff</a>
+                    </li>
+                    {% endif %}
+                </ul>
+                <a href="{% url 'sickinfo' %}" class="btn btn-brand ms-lg-3">Report Disease</a>
+            </div>
+        </div>
+    </nav>
+
+
+<div class="container mt-5">
+    <!-- ======= Appointment Section ======= -->
+    <div class="col-12 grid-margin stretch-card">
+        <div class="card">
+            <br>
+          <div class="card-body">
+            
+          <div class="section-title">
+            <button class='btn btn-brand'>{% trans "Your previous details" %}</button>
+            <h4>{% trans "Provide accurate disease information" %}</h4>
+            </div>
+  
+          <form method="POST">
+            {% csrf_token %}
+            <div class="row">
+              <div class="col-md-4 form-group">
+                <input type="text" name="mtaa" class="form-control" placeholder="{% trans 'Current street' %}" data-rule="minlen:4" data-msg="Please enter at least 4 chars">
+                <div class="validate"></div>
+              </div>
+              <div class="col-md-4 form-group mt-3 mt-md-0">
+                <input type="text" class="form-control" name="kata" placeholder="{% trans 'ward' %}" data-rule="email" data-msg="Please enter a valid email">
+                <div class="validate"></div>
+              </div>
+              <div class="col-md-4 form-group mt-3 mt-md-0">
+                <input type="text" class="form-control" name="wilaya" placeholder="{% trans 'district' %}" data-rule="minlen:4" data-msg="Please enter at least 4 chars">
+                <div class="validate"></div>
+              </div>
+            </div>
+            <div class="form-group mt-3">
+              <label for="exampleSelect">Select Option</label>
+                <select class="form-control" id="exampleSelect" name="service">
+                  <option value="OPD">OPD</option>
+                  <option value="FFF">FFF</option>
+                  <option value="DLC">DLC</option>
+                </select>
+            </div>
+          
+            
+            
+  
+            <div class="form-group mt-3">
+              <textarea class="form-control" name="maelezo" rows="5" placeholder="{% trans 'Write down the problem youre facing' %}"></textarea>
+              <div class="validate"></div>
+            </div><br>
+            <div class="text-center"><button type="submit" class="btn btn-brand">{% trans "Report now" %}</button></div>
+          </form>
+
+
+
+          {% if suggested_hospital %}
+          <div class="mt-4">
+            <div class="alert alert-fill-info" role="alert">
+              <i class="fa fa-exclamation-triangle"></i>
+              {% trans "Suggested Hospital:" %} <b>{{ suggested_hospital.name }}</b>
+              <p>{% trans "Street:" %} {{ suggested_hospital.street }}</p>
+              <p>{% trans "Ward:" %} {{ suggested_hospital.ward }}</p>
+              <p>{% trans "District:" %} {{ suggested_hospital.district }}</p>
+            </div>
+             
+          </div>
+          {% else %}
+          <div class="mt-4">
+              <p>{% trans "No matching hospital found." %}</p>
+          </div>
+          {% endif %}
+  
+        </div>
+        </div>
+      </section><!-- End Appointment Section -->
+</div>
+</div>
+<!-- container-scroller -->
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
+    
+</body>
+
+</html>

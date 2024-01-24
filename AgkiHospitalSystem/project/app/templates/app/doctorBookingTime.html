@@ -1,0 +1,46 @@
+{% extends 'app/base2.html' %}
+{%block content%}
+<br>
+<div class="container">
+<div class="col-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        
+        <h4 class="card-title">Plan a Time</h4>
+                    {% for message in messages %}
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <strong>{{message}}</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                      </div>
+                      {% endfor %}
+        
+        <form method="post">
+            {% csrf_token %}
+            {{ form.media }}
+            <div class="form-group">
+                <label for="{{ form.period.id_for_label }}">Select Date and Time</label>
+                <div class="input-group date" id="datetimepicker" data-target-input="nearest">
+                    <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker" name="{{ form.period.name }}" />
+                    <div class="input-group-append" data-target="#datetimepicker" data-toggle="datetimepicker">
+                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-success">Submit</button>
+        </form>
+
+        <script>
+            // Activate the datetime picker
+            $(function () {
+                $('#datetimepicker').datetimepicker({
+                    format: 'YYYY-MM-DD HH:mm:ss',  // Specify the desired datetime format
+                    useCurrent: false,
+                });
+            });
+            </script>
+
+        </div>      
+        </div>      
+    </div>      
+</div>
+{%endblock%}

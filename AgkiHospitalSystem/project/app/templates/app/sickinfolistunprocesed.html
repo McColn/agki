@@ -1,0 +1,65 @@
+{% extends 'app/base2.html' %}
+{%block content%}
+<br>
+<div class="container mt-5">
+<div class="col-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">TAARIFA ZA WAGONJWA WA MBALI</h4>
+        <a href="{% url 'sickinfolistunprocesed' %}"><button class='btn btn-outline-primary btn-fw'>unprocessed</button></a>         
+        <a href="{% url 'sickinfolistprocesed' %}"><button class='btn btn-outline-primary btn-fw'>processed</button></a>        
+        <a href="{% url 'sickinfolist' %}"><button class='btn btn-outline-primary btn-fw'>All request</button></a>       
+        
+        <div class="table-responsive">
+            {% if x %}
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        
+                        <th>username</th>
+                        <th>mtaa</th>
+                        <th>kata</th>
+                        <th>wilaya </th>
+                        <th>maelezo</th>
+                        <th>mda</th>
+                        <th>hospital</th>
+                        <th>Action</th>
+                        
+
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in x %}
+                    <tr>
+                        
+                        <td><a href="{% url 'detailedUser' i.id %}">{{i.user.username}}</a></td>
+                        <td>{{i.mtaa}}</td>
+                        <td>{{i.kata}}</td>
+                        <td>{{i.wilaya}}</td>
+                        <td>{{i.maelezo}}</td>
+                        <td>{{i.mda}}</td>
+                        <td>{{i.hospital}}</td>
+                        <td><a href="{% url 'sickinfoEdit' i.pk %}">  select hospital</a></td>
+                        
+
+                    </tr>
+                    {% endfor %}
+                    <!-- Add more rows as needed -->
+                </tbody>
+            </table>
+            {% else %}
+            <br>
+            <div class="alert alert-fill-primary" role="alert">
+                <i class="fa fa-exclamation-triangle"></i>
+                There! No info yet
+              </div>
+            {% endif %}
+        </div>
+
+        <br>
+        <a href="{% url 'home' %}"><button class="btn btn-inverse-primary btn-fw">Cancel</button></a>
+    </div>
+    </div>
+</div>
+</div>
+{%endblock%}

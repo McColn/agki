@@ -1,0 +1,44 @@
+<!-- prescriptions/templates/prescriptions/prescription_list.html -->
+
+{% extends 'app/base2.html' %}
+
+{% block content %}
+<br>
+<br>
+<div class="container">
+<div class="table-responsive">
+  <h2>Prescription List</h2>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Patient Name</th>
+        <th>Medicine</th>
+        <th>Dosage</th>
+        <th>Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for patient, prescriptions in prescriptions.items %}
+        {% for prescription in prescriptions %}
+          <tr>
+            {% if forloop.first %}
+              <td rowspan="{{ prescriptions|length }}">{{ patient }}</td>
+            {% endif %}
+            <td>{{ prescription.medicine }}</td>
+            <td>{{ prescription.dosage }}</td>
+            <td>{{ prescription.amount }}</td>
+            
+          </tr>
+        {% endfor %}
+      {% empty %}
+        <tr>
+          <td colspan="4">No prescriptions available.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <br>
+  <a href="{% url 'patientList'%}"><button class="btn btn-success">Go Back</button></a>
+</div>
+</div>
+{% endblock %}

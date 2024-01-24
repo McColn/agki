@@ -1,0 +1,186 @@
+{% extends 'app/base2.html' %}
+{%block content%}
+
+<style>
+    .section-header {
+        margin-bottom: 20px;
+    }
+
+    .card {
+        margin-bottom: 20px;
+    }
+    
+
+    .card {
+        margin-bottom: 20px;
+    }
+
+    .patient-info {
+        background: darkgreen;
+        /* background:  #007bff; */
+
+        color: white;
+        padding: 20px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .patient-details-btn {
+        background-color: lightblue;
+        border: none;
+    }
+    .patient-details-btn {
+    width: 30%;
+    margin: 0 auto;
+    display: block;
+}
+
+</style>
+
+<div class="container">
+    <h1 class="mt-5 mb-4 text-center">Patient Details</h1>
+
+    <div class="row patient-info">
+        <div class="col-md-12">
+            <h2><strong>{{x.fullname}}</strong></h2>
+            <button class="btn btn-light">Age: {{x.age}} | Gender: {{x.gender}} | Phone: 123-456-7890</button>
+        </div>
+    </div>
+
+    <!-- Reception Section -->
+    {% if user.is_receptionist  or user.is_doctor %}
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="card-title">Reception</h5>
+            {% if user.is_receptionist %}
+            <a href="{% url 'reception' x.id %}"><button class="btn btn-success">Edit</button></a>
+            {% endif %}
+        </div>
+        <div class="card-body">
+            
+            <p><strong>Address:</strong> {{x.address}}</p>
+            
+            <p><strong>Height:</strong> {{x.height}} cm</p>
+            <p><strong>Blood Pressure:</strong> {{x.pressure}} mmHg</p>
+            <p><strong>Weight:</strong> {{x.weight}} kg</p>
+            <!-- <small class="text-muted">Receptionist: {{ x.modified_by.username }}</small> -->
+        
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Doctor Section -->
+    {% if user.is_doctor or user.is_laboratorist %}
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="card-title">Doctor</h5>
+            {% if user.is_doctor %}
+            <a href="{% url 'doctorFirstSession' x.id %}"><button class="btn btn-success">Edit</button></a>
+            {% endif %}
+        </div>
+        <div class="card-body">
+            {% if user.is_doctor %}
+            <p><strong>Symptoms Reported:</strong> {{x.dalili}}</p>
+            {% endif %}
+            <p><strong>Possible Disease(s) to be Tested:</strong> {{x.possibleDiseases}}</p>
+            
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Lab Section -->
+    {% if user.is_laboratorist  or user.is_doctor %}
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="card-title">Lab</h5>
+            {% if user.is_laboratorist %}
+            <a href="{% url 'laboratory' x.id %}"><button class="btn btn-success">Edit</button></a>
+            {% endif %}
+        </div>
+        <div class="card-body">
+            <p><strong>Tests Conducted:</strong> {{x.testConducted}}</p>
+            <p><strong>Test Results:</strong> {{x.labResults}}</p>
+            
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Doctor (Post Lab Results) Section -->
+    {% if user.is_pharmacist  or user.is_doctor %}
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="card-title">Doctor (Post Lab Results)</h5>
+            {% if user.is_doctor %}
+            <a href="{% url 'doctorSecondSession' x.id %}"><button class="btn btn-success">Final results</button></a>
+            <a href="{% url 'process_prescription' x.id %}"><button class="btn btn-success">Medicine</button></a>
+            
+            {% endif %}
+        </div>
+        <div class="card-body">
+            {% if user.is_doctor %}
+            <p><strong>Concluding Disease Observation:</strong> {{x.actualDiseases}}</p>
+            {% endif %}
+            <p><strong>Recomendation or extra medicine:</strong> {{x.otherRecomendation}}</p>
+            <p><strong>Medicine Required:</strong> <br>
+                <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                      <tr>
+                        
+                        <th>Medicine</th>
+                        <th>Dosage</th>
+                        <th>Amount</th>
+                        {% if user.is_pharmacist %}
+                        <th>unitcost</th>
+                        <th>Total cost</th>
+                        {% endif %}
+                      </tr>
+                    </thead>
+                    <tbody>
+                        {% for prescription in prescriptions %}
+                          <tr>
+                            
+                            <td>{{ prescription.medicine }}</td>
+                            <td>{{ prescription.dosage }}</td>
+                            <td>{{ prescription.amount }}</td>
+                            {% if user.is_pharmacist %}
+                            <td>{{ prescription.cost }}</td>
+                            <td>{{ prescription.totalCost }}</td>
+                            {% endif %}
+                            <td>
+                                <form method="post" action="{% url 'delete_prescription' prescription.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                </form>
+                            </td>
+                          </tr>
+                      {% empty %}
+                        <tr>
+                          <td colspan="4">No prescriptions available.</td>
+                        </tr>
+                      {% endfor %}
+                      
+                    </tbody>
+                  </table>
+                </div>
+                  <br>
+                  {% if user.is_pharmacist %}
+                  <div class="row">
+                    <div class="col-lg-6"></div>
+                    <div class="col-lg-6"><b>TOTAL CHECK:  {{sum_total_cost}}</b></div>
+                  </div>
+                  {% endif %}
+            </p>
+            <br>
+            {% if user.is_pharmacist %}
+            <a href="{% url 'invoice' x.id %}"><button class="btn btn-success w-30">Generate invoice</button></a>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+
+    <a href="{% url 'patientList' %}"><button class="btn btn-success patient-details-btn mt-3">Go back</button></a>
+    <br>
+</div>
+
+{% endblock %}

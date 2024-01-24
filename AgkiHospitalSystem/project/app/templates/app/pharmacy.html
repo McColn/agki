@@ -1,0 +1,44 @@
+{% extends 'app/base2.html' %}
+{%block content%}
+
+
+
+
+
+        <br>
+        <div class="container">
+        <div class="col-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Pharmacy form </h4>
+                    <a href="{% url 'patientList' %}"><button class='btn btn-outline-primary btn-fw'>Patient list</button></a>   
+                    {% for message in messages %}
+                    <div class = "alert alert-primary alert-dismissible fade show" role="alert">
+                        {{message}}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
+                    </div>
+                    {% endfor %}
+                    
+                    <form method='POST' class="forms-sample" >
+                        {% csrf_token %}
+                        <br>
+                        <br>
+                      
+                      <div class="form-group">
+                        <label for="gender">Total cost of medicine:</label>
+                        <input type="number" step="0.01" class="form-control" name="cost" value="{{s.cost}}">
+                      </div>
+                      
+                      
+                      <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                      
+                    </form>
+                    <a href="{% url 'patientDetail' id=s.id %}">
+                      <button class="btn btn-light">Cancel</button>
+                  </a>
+                </div>
+            </div>
+        </div>
+      </div>
+
+{%endblock%}

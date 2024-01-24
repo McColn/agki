@@ -1,0 +1,39 @@
+{% extends 'app/base2.html' %}
+{%block content%}
+
+<div class="container">
+    <h4 class="mt-2 mb-2">Medication Details</h4>
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+          <tr>
+            
+            <th>Name</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>discount_price</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for i in x %}
+              <tr>
+                
+                <td>{{ i.title }}</td>
+                <td>{{ i.category }}</td>
+                <td>{{ i.price }}</td>
+                <td>{{ i.discount_price }}</td>
+                <td><a href="{% url 'medicationDescriptionStaff' i.id %}"><button class="btn btn-success">Details</button></a><td>
+              </tr>
+          {% empty %}
+            <tr>
+              <td colspan="4">No prescriptions available.</td>
+            </tr>
+          {% endfor %}
+          
+        </tbody>
+      </table>
+      <a href="{% url 'medicationAdd' %}"><button class='btn btn-outline-success btn-fw'>+ Add new Medicine</button></a>
+    </div>
+</div>
+{%endblock%}

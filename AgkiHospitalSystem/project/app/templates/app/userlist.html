@@ -1,0 +1,114 @@
+{% extends 'app/base2.html' %}
+{%block content%}
+
+<br>
+<div class="container mt-5">
+<div class="col-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">LIST OF SYSTEM USERS</h4>
+        {% comment %} <a href="{% url 'sickinfolistunprocesed' %}"><button class='btn btn-outline-primary btn-fw'>unprocessed</button></a>         
+        <a href="{% url 'sickinfolistprocesed' %}"><button class='btn btn-outline-primary btn-fw'>processed</button></a>        
+        <a href="{% url 'sickinfolist' %}"><button class='btn btn-outline-primary btn-fw'>All request</button></a>   {% endcomment %}
+       
+        
+        <div class="table-responsive">
+            {% if x %}
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        
+                        <th>username</th>
+                        <th>firstname</th>
+                        <th>lastname</th>
+                        <th>age</th>
+                        <th>phone </th>
+                        <th>location</th>
+                        <th>position</th>
+                        <th>regno</th>
+                        <th>img</th>
+                        <th>Action</th>
+                        
+
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in x %}
+                    <tr>
+                        
+                        <td><a href="{% url 'detailedUser' i.id %}">{{i.username}}</a></td>
+                        <td>{{i.first_name}}</td>
+                        <td>{{i.last_name}}</td>
+                        <td>{{i.age}}</td>
+                        <td>{{i.phone}}</td>
+                        <td>{{i.location}}</td>
+                        <td>
+                            {% if i.is_doctor %}
+                            Doctor <br>
+                            {% endif %}
+                            {% if i.is_laboratorist %}
+                            Laboratorist<br>
+                            {% endif %}
+                            {% if i.is_receptionist %}
+                            Receptionist<br>
+                            {% endif %}
+                            {% if i.is_patient %}
+                            Patient<br>
+                            {% endif %}
+                            {% if i.is_pharmacist %}
+                            Pharmacist<br>
+                            {% endif %}
+                        </td>
+                        <td>{{i.reg_no}}</td>
+                        <td>{{i.image}}</td>
+                        {% if user.is_superuser %}
+                        <td>
+                            <a href='{% url 'useredit' i.id %}'><button class='btn btn-primary btn-sm'>Edit<i class="fa fa-edit ml-1"></i></button></a>
+                            
+                            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal-2">Delete<i class="fa fa-trash ml-1"></i></button>
+                            <!-- Modal starts -->
+                  
+                            <div class="modal fade" id="exampleModal-2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel-2" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel-2">Alert</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    </div>
+                                    <div class="modal-body">
+                                    <p>Are you sure you want to delete</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <a href='{% url 'userdelete' i.id %}'><button type="button" class="btn btn-primary">Yes</button></a>
+                                    <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                        </td>
+                        {% endif%}
+                        
+
+                    </tr>
+                    {% endfor %}
+                    <!-- Add more rows as needed -->
+                </tbody>
+            </table>
+            {% else %}
+            <br>
+            <div class="alert alert-fill-primary" role="alert">
+                <i class="fa fa-exclamation-triangle"></i>
+                There! No USER yet
+              </div>
+            {% endif %}
+        </div>
+
+        <br>
+        <a href="{% url 'home' %}"><button class="btn btn-inverse-primary btn-fw">Cancel</button></a>
+    </div>
+    </div>
+</div>
+</div>
+{%endblock%}

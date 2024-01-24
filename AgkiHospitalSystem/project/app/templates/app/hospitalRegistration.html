@@ -1,0 +1,71 @@
+{% extends 'app/base2.html' %}
+{%block content%}
+
+
+
+
+<br>
+<div class="container">
+    
+
+<div class="col-12 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Basic form elements</h4>
+            {% for message in messages %}
+            <div class = "alert alert-primary alert-dismissible fade show" role="alert">
+                {{message}}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
+            </div>
+            {% endfor %}
+            <p class="card-description">
+              Basic form elements
+            </p>
+            <form class="forms-sample" method='POST'>
+                {% csrf_token %}
+              <div class="form-group">
+                <label for="name">Name of hospital</label>
+                <input type="text" class="form-control" name="name" placeholder="Name">
+              </div>
+              <div class="form-group">
+                <label for="location">Region</label>
+                <input type="text" class="form-control" name="region" placeholder="region">
+              </div>
+              <div class="form-group">
+                <label for="location">district</label>
+                <input type="text" class="form-control" name="district" placeholder="district">
+              </div>
+              <div class="form-group">
+                <label for="location">ward</label>
+                <input type="text" class="form-control" name="ward" placeholder="ward">
+              </div>
+              <div class="form-group">
+                <label for="location">street</label>
+                <input type="text" class="form-control" name="street" placeholder="street">
+              </div>
+              
+              
+              <div class="form-group">
+                <label for="level">Hospital level</label>
+                  <select class="form-control" name="level">
+                    <option>------</option>
+                    <option>Zahanati</option>
+                    <option>pharmacr</option>
+                    <option>wilaya</option>
+                  </select>
+                </div>
+              
+              
+              
+              <button type="submit" class="btn btn-primary mr-2">Submit</button>
+              
+            </form>
+            <a href="{% url 'registeredHosptal' %}"><button class="btn btn-light">Cancel</button></a>
+        </div>
+    </div>
+</div>
+</div>      
+        
+      
+
+{%endblock%}

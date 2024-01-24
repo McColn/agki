@@ -1,0 +1,37 @@
+{% extends 'app/base2.html' %}
+{%block content%}
+
+
+
+
+
+        <br>
+        <div class="container mt-5">
+        <div class="col-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Department Update</h4>
+                    
+                    
+                    <form method='POST' class="forms-sample" >
+                        {% csrf_token %}
+                      
+                      <div class="form-group">
+                        <label for="gender">Department name</label>
+                        <input type="text" class="form-control" name="name" value="{{s.name}}">
+                      </div>
+                      <div class="form-group">
+                        <label for="gender">Description</label>
+                        <input type="text" class="form-control" name="descrption" value="{{s.descrption}}">
+                      </div>
+                      
+                      <button type="submit" class="btn btn-success mr-2">Update</button>
+                      
+                    </form>
+                    <a href="{% url 'patientList' %}"><button class="btn btn-light">Cancel</button></a>
+                </div>
+            </div>
+        </div>
+      </div>
+
+{%endblock%}

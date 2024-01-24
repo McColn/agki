@@ -1,0 +1,55 @@
+{% extends 'app/base2.html' %}
+{%block content%}
+
+        <br>
+        <div class="container mt-5">
+        <div class="col-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Edit Category add form</h4> 
+
+                    {% for message in messages %}
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <strong>{{message}}</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                      </div>
+                      {% endfor %}
+
+                    {% if form.errors %}
+                        <div class="alert alert-danger">
+                        <strong>Error:</strong> Please correct the errors below.
+                        <ul>
+                            {% for field, errors in form.errors.items %}
+                            <li>{{ field }}: {{ errors.0 }}</li>
+                            {% endfor %}
+                        </ul>
+                        </div>
+                    {% endif %}
+
+                    <form method='POST' class="forms-sample" >
+                        {% csrf_token %}
+                        
+                      <div class="form-group">
+                        <label for="name">Name of category</label>
+                        <input type="text" class="form-control" name="name" value="{{s.name}}">
+                      </div>
+                      <div class="form-group">
+                        <label for="address">slug (type same as name)</label>
+                        <input type="text" class="form-control" name="slug" value="{{s.slug}}">
+                      </div>
+                      
+                      <div class="form-group">
+                        <label for="gender">description</label>
+                        <input type="text" class="form-control" name="description" value="{{s.description}}">
+                      </div>
+                      
+                      <button type="submit" class="btn btn-success mr-2">Submit</button>
+                      
+                    </form>
+                    <a href="{% url 'medicineCategory' %}"><button class="btn btn-light">Cancel</button></a>
+                </div>
+            </div>
+        </div>
+      </div>
+
+{%endblock%}
