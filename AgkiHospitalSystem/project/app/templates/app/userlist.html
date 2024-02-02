@@ -58,6 +58,9 @@
                             {% if i.is_pharmacist %}
                             Pharmacist<br>
                             {% endif %}
+                            {% if i.is_seller %}
+                            Seller<br>
+                            {% endif %}
                         </td>
                         <td>{{i.reg_no}}</td>
                         <td>{{i.image}}</td>

@@ -2,6 +2,22 @@
 {% load static %}
 {% block content %}
 
+    <!-- VIDEO -->
+    {% for i in x %}
+
+    <div class="container mt-3">
+            <div class="row justify-content-between align-items-center">
+                <video class="video" src="{{ i.video_file.url }}" controls></video>
+            </div>
+            {% if user.is_superuser %}
+                    <a href="{% url 'purposeVideoEdit' i.id %}">
+                        <button class="btn btn-success">Change Video</button>
+                    </a>
+            {% endif %}
+            
+    </div>
+
+
     <!-- HERO -->
     {% for frontpage in frontpages %}
     <section id="hero" class="min-vh-100 d-flex align-items-center text-center" style="background: linear-gradient(rgba(144, 238, 144, 0.507), rgba(46, 139, 87, 0.438)), url({{frontpage.image.url}})">
@@ -31,25 +47,28 @@
     </section>
     {% endfor %}
 
+    
+
     <section id="hero" class="min-vh-100 d-flex align-items-center text-center" style="background: linear-gradient(rgba(144, 238, 144, 0.507), rgba(46, 139, 87, 0.438)), url({{frontpage.image.url}})">
         <div class="container">
             <div class="row">
                 <div class="col-12">
                     <h2 data-aos="fade-left" class="text-uppercase text-alert fw-semibold mt-5 mb-5">
-                        Access to health services in Tanzania is low and inadequate especially
-                         in rural areas 
+                        {{i.header}}
                     </h2>
                     <h4 class="text-white mt-5 mb-5" data-aos="fade-right">
-                        The country face high rate of maternal and child mortality, pneumonia and malaria 
+                        {{i.subheader}}
                     </h4>
                     <h3 class="text-black mt-3 mb-4" data-aos="fade-right">
-                        Tanzania’s health service has been challenged with inadequate fund,
-                         shortage of fully trained health staff in the hospitals, poor communication
-                          and transport infrastructure. Also, it was recorded that,
-                           about 45% of the population were living within 1 km of a health facility,
-                            93% within 10 km and 72% within 5km (WHO, 2008).
+                        {{i.description}}
                     </h3>
-                    
+
+                    {% if user.is_superuser %}
+                    <a href="{% url 'purposeFirst' i.id%}">
+                        <button class="btn btn-success">Edit</button>
+                    </a>
+                    {% endif %}
+
                     <br>
                 </div>
             </div>
@@ -58,24 +77,29 @@
     
 
 
-    <section id="second" class="min-vh-100 d-flex align-items-center" style="background-color: darkgreen">
+    <section id="second" class="min-vh-100 d-flex align-items-center bg-success">
         <div class="container">
             <div class="row">
                 <div class="col-12">
                     
                     <h2 class="text-white text-center" data-aos="fade-right">
-                        Nearly half the population remains below the income poverty line of $1.90 per day. 
-                        With few resources, deteriorated facilities and a stunning shortage of doctors
-                        (just three for every 100,000 people), the government of Tanzania has long
-                        faced enormous barriers to ensuring equal access to healthcare for its people.
+                        {{i.descriptionSecond}}
                     </h2>
+                    
+                    <center>
+                        {% if user.is_superuser %}
+                        <a href="{% url 'purposeSecond' i.id%}">
+                            <button class="btn btn-light">Edit</button>
+                        </a>
+                        {% endif %}
+                    </center>
                     
                     <br>
                 </div>
             </div>
         </div>
     </section>
-
+    
 
 
     <section id="blog" class="section-padding">
@@ -93,14 +117,16 @@
                 <div class="col-12">
                     
                     <h2 class="text-black text-center" data-aos="fade-right">
-                        Access to health services in Tanzania is low and inadequate
-                         especially in rural areas.
-                         A  Half of the population remains below the income poverty
-                          line of $1.90 per day. With few resources, deteriorated facilities 
-                          and a stunning shortage of doctors (just three for every 100,000 people)
-                           it was recorded that, about 93% of the population were
-                            living within 10 km of a health facility ( WHO, 2021).
+                        {{i.problem}}
                     </h2>
+
+                    <center>
+                        {% if user.is_superuser %}
+                        <a href="{% url 'purposeProblem' i.id%}">
+                            <button class="btn btn-success">Edit</button>
+                        </a>
+                        {% endif %}
+                        </center>
                     
                     <br>
                 </div>
@@ -125,18 +151,16 @@
                 <div class="col-12">
                     
                     <h2 class="text-black" data-aos="fade-right">
-                        Agki Medical Laboratory decides to ameliorate by providing digital mobile 
-                        dispensary services{Mobile clinic} including medication, clinic and lab testing, 
-                        using a solar-powered van for patients in rural areas, particularly pregnant 
-                        women and children under the age of five. To offer quality services at Agki
-                         Centre for all time and to design a platform and APP that operates both 
-                         online and offline to connect patients to nearby registered hospitals,
-                          Health Centre, Polyclinics, Pharmacies, Medical Lab, Doctors specialists,
-                           qualified doctors and nurses from the street for emergency/first aid, 
-                            diagnosis, Medications and treatment. This offers a faster, reliable 
-                            on-time and consistent rehabilitation hence reducing time and cost to
-                             patients and deaths possibly due to late attendance
+                        {{i.solution}}
                     </h2>
+
+                    <center>
+                        {% if user.is_superuser %}
+                        <a href="{% url 'purposeSolution' i.id%}">
+                            <button class="btn btn-success">Edit</button>
+                        </a>
+                        {% endif %}
+                    </center>
                     
                     <br>
                 </div>
@@ -144,7 +168,7 @@
             
         </div>
     </section>
-
+    {% endfor %}
 
 
 
@@ -160,7 +184,8 @@
                 </div>
             </div>
             <div class="row">
-                
+
+
                 <div class="col-md-6" data-aos="fade-down" data-aos-delay="150">
                     <div class="team-member image-zoom ">
                         
@@ -169,11 +194,30 @@
                             <div class="line"></div>
                         </div>
                         <div class="round">
-                            <p class="bg-dark p-4 text-white">Easy accesibity of quality health care services in rural areas.</p>
-                            <p class="bg-dark p-4 text-white">Reduction of both maternal and under five mortality rate</p>
+                            {% for i in purposes %}
+                            <p class="bg-dark p-4 text-white">
+                                {{i.description}}
+                                {% if user.is_superuser %}
+                                    <a href="{% url 'purposeEdit' i.id %}">
+                                        <button class="btn btn-success">Edit</button>
+                                    </a>
+                                    <a href="{% url 'purposeDelete' i.id %}">
+                                        <button class="btn btn-success">Delete</button>
+                                    </a>
+                                {% endif %}
+                            </p>
+                            
+                            {% endfor %}
+
+                            {% if user.is_superuser %}
+                                <a href="{% url 'purposeAdd' %}">
+                                    <button class="btn btn-success">+ Add</button>
+                                </a>
+                            {% endif %}
+
                         </div>
                     </div>
-                </div>
+                </div> 
 
                 <div class="col-md-6" data-aos="fade-down" data-aos-delay="150">
                     <div class="team-member image-zoom">
@@ -183,12 +227,26 @@
                             <div class="line"></div>
                         </div>
                         <div class="round">
-                            <p class="bg-dark p-4 text-white">Coordination of both different health facilities and qualified health professional with patients.</p>
-                            <p class="bg-dark p-4 text-white">Creation of employment to the different healthcare providers</p>
-                            <p class="bg-dark p-4 text-white">We helped 40,000 customers includes; pregnant women, under five and patient with permanent disabilities</p>
-                            <p class="bg-dark p-4 text-white">We won several awards and grants such as Sankalp Award, UNFPA climate hack lab, Hindsight Venture, Uwezo Tanzania
-                                 {Unreached Africa& Follow Her}, Villgro Africa and Agency French Development {AFD}.</p>
-                            
+                            {% for i in success %}
+                            <p class="bg-dark p-4 text-white">
+                                {{i.description}}
+                                {% if user.is_superuser %}
+                                    <a href="{% url 'purposeSuccessEdit' i.id %}">
+                                        <button class="btn btn-success">Edit</button>
+                                    </a>
+                                    <a href="{% url 'purposeSuccessDelete' i.id %}">
+                                        <button class="btn btn-success">Delete</button>
+                                    </a>
+                                {% endif %}
+                            </p>
+                            {% endfor %}
+
+                            {% if user.is_superuser %}
+                                <a href="{% url 'purposeSuccessAdd' %}">
+                                    <button class="btn btn-success">+ Add</button>
+                                </a>
+                            {% endif %}
+
                         </div>
                     </div>
                 </div>

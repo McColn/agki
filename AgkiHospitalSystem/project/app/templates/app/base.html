@@ -11,9 +11,23 @@
     <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
     <script src="https://kit.fontawesome.com/90ee3bc580.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     
-    <link rel="stylesheet" href="{% static 'app/videos/index.css' %}">
+    <link rel="stylesheet" href="{% static 'videos/index.css' %}">
+
+
+
+
+    
+
+
+
+
+
     <style>
+        a {
+            text-decoration: none;
+        }
         .image-zoom-wrapper {
             position: relative;
         }
@@ -108,6 +122,9 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'index' %}">Home</a>
+                    </li>
                     
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'create-thread' %}">Chat with a Doctor</a>
@@ -124,10 +141,11 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'purpose' %}">Purpose</a>
                     </li>
+                    {% if user.is_authenticated %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'order_summary' %}">Cart ({{ total_cart }})</a>
                     </li>
-                    {% if user.is_authenticated %}
+                    
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'signout' %}">Signout</a>
                     </li>
@@ -137,11 +155,17 @@
                     </li>
                     {% endif %}
                     
+                    {% if user.is_pharmacist  or user.is_doctor or user.is_laboratorist or user.is_receptionist or user.is_seller %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'home' %}" class="btn btn-brand ms-lg-3">Our-Pratform</a>
+                    </li>
+                    {% endif %}
+                    
                 </ul>
-                {% if user.is_pharmacist  or user.is_doctor or user.is_laboratorist or user.is_receptionist %}
-                <a href="{% url 'home' %}" class="btn btn-brand ms-lg-3">Staff</a>
+                {% if user.is_authenticated %}
+                <a href="{% url 'sickinfo' %}" class="btn btn-success ms-lg-3">Report Disease</a>
                 {% else %}
-                <a href="{% url 'sickinfo' %}" class="btn btn-brand ms-lg-3">Report Disease</a>
+                <a href="{% url 'signin' %}" class="btn btn-success ms-lg-3">Login to Report Disease</a>
                 {% endif %}
             </div>
         </div>
@@ -171,29 +195,33 @@
                         <div class="line"></div>
                         <ul>
                             <li><a href="{% url 'create-thread' %}">Chat with a doctor</a></li>
-                            <li><a href="#">Order Medication</a></li>
-                            <li><a href="#">Book a Lab Test</a></li>
-                            <li><a href="#">Book a Doctor at Home</a></li>
-                            <li><a href="#">Book a Wellness Package</a></li>
+                            <li><a href="{% url 'medicationRequest' %}">Order Medication</a></li>
+                            <li><a href="{% url 'bookLabTest' %}">Book a Lab Test</a></li>
+                            <li><a href="{% url 'bookDoctor' %}">Book a Doctor at Home</a></li>
                         </ul>
                     </div>
                     <div class="col-lg-3 col-sm-6">
                         <h5 class="mb-0 text-white">ABOUT</h5>
                         <div class="line"></div>
                         <ul>
-                            <li><a href="#">Purpose</a></li>
+                            <li><a href="{% url 'purpose' %}">Purpose</a></li>
                             <li><a href="#">Career</a></li>
-                            <li><a href="#">Report a Disease</a></li>
+                            <li><a href="{% url 'sickinfo' %}">Report a Disease</a></li>
                         </ul>
                     </div>
                     <div class="col-lg-3 col-sm-6">
                         <h5 class="mb-0 text-white">CONTACT</h5>
                         <div class="line"></div>
                         <ul>
-                            <li>+255 777 777 777</li>
-                            <li>agki@gmail.com</li>
-                            <li>231, Kibaha-Pwani</li>
-                            <li>www.example.com</li>
+                            {% for i in footer %}
+                                <li>{{i.phonenumber}}</li>
+                                <li>{{i.email}}</li>
+                                <li>{{i.address}}</li>
+                                {% if user.is_superuser %}
+                                <a href="{% url 'footerContact' i.id %}"><button class="btn btn-success">Edit</button></a>
+                                {% endif %}
+                            {% endfor %}
+                                <li>Tanzania</li>
                         </ul>
                     </div>
                 </div>
@@ -215,6 +243,11 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
   
   </body>
   </html> 

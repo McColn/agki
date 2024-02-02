@@ -12,20 +12,20 @@
                     <h1 data-aos="fade-left" class="text-uppercase text-white fw-semibold display-1">{{frontpage.header}}</h1>
                     <h5 class="text-white mt-3 mb-4" data-aos="fade-right">{{frontpage.body}}</h5>
                     {% if user.is_doctor or user.is_laboratorist or user.is_receptionist or user.is_pharmacist %}
-                    <a href="{% url 'home' %}" class="btn btn-brand me-2">STAFF PAGE</a><br>
+                    <a href="{% url 'home' %}" class="btn btn-success me-2">OUR PLATFORM</a><br>
                     {% else%}
                     <div data-aos="fade-up" data-aos-delay="50">
                         {% if user.is_authenticated %}
-                        <a href="{% url 'sickinfo' %}" class="btn btn-brand me-2">REPORT A DISEASE</a>
+                        <a href="{% url 'sickinfo' %}" class="btn btn-success me-2">REPORT A DISEASE</a>
                         {% else %}
-                        <a href="{% url 'signin' %}" class="btn btn-brand me-2">SIGN IN TO REPORT A DISEASE</a>
+                        <a href="{% url 'signin' %}" class="btn btn-success me-2">SIGN IN TO REPORT A DISEASE</a>
                         {% endif %}
                         <a href="#portfolio1" class="btn btn-light ms-2">Our Portfolio</a>
                     </div>
                     {% endif %}
                     <br>
                     {% if user.is_superuser %}
-                    <a href="{% url 'frontPageedit' frontpage.id %}" class="btn btn-brand me-2">EDIT</a>
+                    <a href="{% url 'frontPageedit' frontpage.id %}" class="btn btn-success me-2">EDIT</a>
                     {% endif %}
                 </div>
             </div>
@@ -33,8 +33,23 @@
     </section>
     {% endfor %}
 
+    <!-- VIDEO -->
+    
+        <div class="container mt-5 pt-5">
+            {% for video in videos %}
+                <div class="row justify-content-between align-items-center">
+                    <video class="video" src="{{ video.video_file.url }}" controls></video>
+                </div>
+                <br>
+                {% if user.is_superuser %}
+                <a href="{% url 'videoedit' video.id %}" class="btn btn-success ms-lg-3">Change video</a>
+                {% endif %}
+            {% endfor %}
+        </div>
+    
+
     <!-- FEATURED LOGOS -->
-    <section id="services" class="section-padding border-top ">
+    <section id="services" class="section-padding">
         <div class="container">
             <div class="row">
                 <div class="col-12 text-center" data-aos="fade-down" data-aos-delay="150">
@@ -46,83 +61,34 @@
                 </div>
             </div>
             <div class="row g-3 text-center">
+
+                {% for i in featured %}
                 <div class="col-lg-3 col-sm-6" data-aos="fade-down" data-aos-delay="150">
                     <div class="service theme-shadow p-lg-5 p-4">
                         <div class="iconbox">
-                            <img src="{% static 'app/images/sponsors/AFD.png' %}" alt="">
+                            <img src="{{i.image.url}}" alt="">
                         </div>
-                        <h5 class="mt-4 mb-3">Agency French Development </h5>
+                        <h5 class="mt-4 mb-3">{{i.title}}</h5>
+
+                        {% if user.is_superuser %}
+                        <a href="{% url 'featuredEdit' i.id %}" class="btn btn-success ms-lg-3">Edit</a>
+                        <a href="{% url 'featuredDelete' i.id %}" class="btn btn-success ms-lg-3">Delete</a>
+                        {% endif %}
                         
                     </div>
                 </div>
-                <div class="col-lg-3 col-sm-6" data-aos="fade-down" data-aos-delay="150">
-                    <div class="service theme-shadow p-lg-5 p-4">
-                        <div class="iconbox">
-                            <img src="{% static 'app/images/sponsors/HV-LOGO.jpg' %}" alt="">
-                        </div>
-                        <h5 class="mt-4 mb-3">Hindsight Venture</h5>
-                        
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6" data-aos="fade-down" data-aos-delay="150">
-                    <div class="service theme-shadow p-lg-5 p-4">
-                        <div class="iconbox">
-                            <img src="{% static 'app/images/sponsors/Sankalp.png' %}" alt="">
-                        </div>
-                        <h5 class="mt-4 mb-3">Sankalp Award</h5>
-                        
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6" data-aos="fade-down" data-aos-delay="150">
-                    <div class="service theme-shadow p-lg-5 p-4">
-                        <div class="iconbox">
-                            <img src="{% static 'app/images/sponsors/UNFPA.png' %}" alt="">
-                        </div>
-                        <h5 class="mt-4 mb-3">UNFPA climate hack lab</h5>
-                        
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6" data-aos="fade-down" data-aos-delay="150">
-                    <div class="service theme-shadow p-lg-5 p-4">
-                        <div class="iconbox">
-                            <img src="{% static 'app/images/sponsors/VillgroAfrica.png' %}" alt="">
-                        </div>
-                        <h5 class="mt-4 mb-3">Villgro Africa and Agency French Development {AFD}</h5>
-                        
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6" data-aos="fade-down" data-aos-delay="150">
-                    <div class="service theme-shadow p-lg-5 p-4">
-                        <div class="iconbox">
-                            <img src="{% static 'app/images/sponsors/UWEZOTZ.png' %}" alt="">
-                        </div>
-                        <h5 class="mt-4 mb-3">Uwezo Tanzania {Unreached Africa& Follow Her}</h5>
-                        
-                    </div>
-                </div>
+                {% endfor %}
+
+                {% if user.is_superuser %}
+                <a href="{% url 'featuredAdd' %}" class="btn btn-success ms-lg-3">+ Add New</a>
+                {% endif %}
+                
                
                 
             </div>
         </div>
     </section>
-
-    <!-- VIDEO -->
-    <!-- <section id="about" class="section-padding">
-        <div class="container">
-            {% for video in videos %}
-                <div class="row justify-content-between align-items-center">
-                    <video class="video" src="{{ video.video_file.url }}" controls></video>
-                </div>
-                <br>
-                {% if user.is_superuser %}
-                <a href="{% url 'videoedit' video.id %}" class="btn btn-brand ms-lg-3">Change video</a>
-                {% endif %}
-            {% endfor %}
-        </div>
-    </section> -->
-
-
-
+tr
     <!-- why use agki -->
     <section class="section-padding bg-light" id="contact">
         <div class="container">
@@ -141,7 +107,11 @@
                     <div class="col-md-6">
                       <div class="card mb-4" style="border-radius: 5px;">
                         <div class="card-body">
-                          
+                            {% if whyuseagki.image %}
+                            <img src="{{whyuseagki.image.url}}" alt="Image" class="img-fluid float-left mr-3" style="max-width: 40%; " >
+                            {% else %}
+                            <img src="{% static 'images/whyuse/no2.png'%}" alt="Image" class="img-fluid float-left mr-3" style="max-width: 40%; " >
+                            {% endif %}
                           <div>
                             <h5 class="card-title">{{whyuseagki.header}}</h5>
                             <p class="card-text">{{whyuseagki.body}}</p>
@@ -157,8 +127,6 @@
                                 <a href="{% url 'whyuseagkidelete' whyuseagki.id %}" class="btn btn-light ms-lg-3">Delete</a>
                             </div>
                         </div>
-                        
-                        
                         {% endif %}
                       </div>
                       
@@ -169,7 +137,7 @@
                 </div>
             </div>
             {% if user.is_superuser %}
-                <a href="{% url 'whyuseagkiadd' %}" class="btn btn-brand ms-lg-3">+ Add New</a>
+                <a href="{% url 'whyuseagkiadd' %}" class="btn btn-success ms-lg-3">+ Add New</a>
                 {% endif %}
         </div>
     </section>
@@ -197,8 +165,8 @@
                         <h5 class="mt-4 mb-3">{{service.header}}</h5>
                         <p>{{service.body}}</p>
                         {% if user.is_superuser %}
-                        <a href="{% url 'serviceedit' service.id %}" class="btn btn-brand ms-lg-3">Edit</a>
-                        <a href="{% url 'servicedelete' service.id %}" class="btn btn-brand ms-lg-3">Delete</a>
+                        <a href="{% url 'serviceedit' service.id %}" class="btn btn-success ms-lg-3">Edit</a>
+                        <a href="{% url 'servicedelete' service.id %}" class="btn btn-success ms-lg-3">Delete</a>
                         {% endif %}
                     </div>
                     
@@ -206,7 +174,7 @@
                 
                 {% endfor %}
                 {% if user.is_superuser %}
-                <a href="{% url 'serviceadd' %}" class="btn btn-brand ms-lg-3">+ Add New Service</a>
+                <a href="{% url 'serviceadd' %}" class="btn btn-success ms-lg-3">+ Add New Service</a>
                 {% endif %}
                
                 
@@ -241,7 +209,7 @@
                                     <h6 class="mb-0">{{review.name}}</h6>
                                     <small class="text-muted">@{{review.username}}</small>
                                 </div>
-                                <button class="btn btn-link"><i class="fa-brands fa-x-twitter"></i></button>
+                                <button class="btn btn-link"><i class="fa-sucbtn-successs fa-x-twitter"></i></button>
                             </div>
                             <div class="post-body">
                                 <p>
@@ -277,7 +245,7 @@
                 
             </div>
             {% if user.is_superuser %}
-            <a href="{% url 'reviewadd' %}" class="btn btn-brand ms-lg-3">+ Add Review</a>
+            <a href="{% url 'reviewadd' %}" class="btn btn-success ms-lg-3">+ Add Review</a>
             {% endif %}
             </div>
         </div>
@@ -376,7 +344,7 @@
             {% if user.is_superuser %}
                 {% for portfolio in portfolios %}
                     {% if portfolio.id %}
-                        <a href="{% url 'portfolioedit' pk=portfolio.id %}" class="btn btn-brand ms-lg-3">Edit Portfolio</a>
+                        <a href="{% url 'portfolioedit' pk=portfolio.id %}" class="btn btn-success ms-lg-3">Edit Portfolio</a>
                     {% endif %}
                 {% endfor %}
             {% endif %}
@@ -398,28 +366,33 @@
             </div>
             <div class="row g-4 text-center ">
                
-                {% for team in teams %}
+                {% for i in team %}
                 <div class="col-md-3" data-aos="fade-down" data-aos-delay="150">
                     <div class="team-member image-zoom">
                         <div class="image-zoom-wrapper">
                             {% if user.is_superuser %}
                             <button class="btn btn-light delete-button">
-                                <a href="{% url 'useredit' team.id %}"><i class="fas fa-pencil-alt"></i></a>
+                                <a href="{% url 'teamEdit' i.id %}"><i class="fas fa-pencil-alt"></i></a> | 
+                                <a href="{% url 'teamDelete' i.id %}"><i class="fas fa-trash-alt"></i></a>
                             </button>
                             {% endif %}
-                            {% if team.image %}
-                            <img src="{{ team.image.url }}" alt="">
+                            {% if i.image %}
+                            <img src="{{ i.image.url }}" alt="">
                             {% else %}
-                            <img src="{% static 'app/ttt.jpg' %}" alt="">
+                            <img src="{% static 'ttt.jpg' %}" alt="">
                             {% endif %}
                         </div>
                         <div class="team-member-content">
-                            <h4 class="text-white">{{team.first_name}} {{team.last_name}}</h4>
-                            <p class="mb-0 text-white">{{team.position}}</p>
+                            <h4 class="text-white">{{i.name}}</h4>
+                            <p class="mb-0 text-white">{{i.role}}</p>
                         </div>
                     </div>
                 </div>
                 {% endfor %}
+
+                {% if user.is_superuser %}
+                    <a href="{% url 'teamAdd' %}" class="btn btn-success ms-lg-3">+ Add Team Member</a>
+                {% endif %}
                 
             </div>
         </div>
@@ -435,7 +408,8 @@
         </div>
         <iframe style="border:0; width: 100%; height: 350px;" 
         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5164.308037170913!2d38.849879976077744!3d-6.742222165927443!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x185c65a85df9799f%3A0xd8c21caaf535e5d8!2sKbh!5e1!3m2!1sen!2stz!4v1699008580826!5m2!1sen!2stz" frameborder="0" allowfullscreen>
-        </iframe>
+        <iframe style="border:0; width: 100%; height: 350px;"  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3961.911621634472!2d38.8622!3d-6.780610000000001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x185c6fa073d13fe9%3A0xce319068288e25b2!2sVikuge!5e0!3m2!1sen!2stz!4v1706607687017!5m2!1sen!2stz"  frameborder="0" allowfullscreen ></iframe>    
+    </iframe>
     </section>
 
     <!-- CONTACT -->
@@ -457,7 +431,7 @@
                             <textarea name="message" rows="5" class="form-control" placeholder="Enter Message"></textarea>
                         </div>
                         <div class="form-group col-lg-12 d-grid">
-                            <button class="btn btn-brand">Send Message</button>
+                            <button class="btn btn-success">Send Message</button>
                         </div>
                     </form>
                 </div>
@@ -494,7 +468,7 @@
 
 
             {% if user.is_superuser %}
-            <a href="{% url 'faqadd' %}" class="btn btn-brand ms-lg-3">Add Faq</a>
+            <a href="{% url 'faqadd' %}" class="btn btn-success ms-lg-3">Add Faq</a>
             {% endif %}
 
             
@@ -536,7 +510,7 @@
                 {% endfor %}
             </div>
             {% if user.is_superuser %}
-            <a href="{% url 'news' %}" class="btn btn-brand ms-lg-3">+ Add News</a>
+            <a href="{% url 'news' %}" class="btn btn-success ms-lg-3">+ Add News</a>
             {% endif %}
         </div>
     </section>

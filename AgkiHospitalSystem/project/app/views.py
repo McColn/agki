@@ -88,17 +88,29 @@ def base2(request):
     return render(request,'app/base2.html')
 
 def base(request):
+    footer = FooterContact.objects.all()
     total_cart = 0
     if request.user.is_authenticated:
         # Retrieve the total_cart only if the user is authenticated
         total_cart = Order.objects.filter(user=request.user).count()
     context = {
         'total_cart': total_cart,
+        'footer':footer,
     }
     return render(request, 'app/base.html', context)
 
 def purpose(request):
-    return render(request,'app/purpose.html')
+    x = PurposeTop.objects.all()
+    purposes = Purpose.objects.all()
+    success = Success.objects.all()
+    footer = FooterContact.objects.all()
+    context = {
+        'x':x,
+        'purposes':purposes,
+        'success':success,
+        'footer':footer
+    }
+    return render(request,'app/purpose.html',context)
 
 def index(request):
     total_cart = 0
@@ -112,6 +124,9 @@ def index(request):
     services = Service.objects.all()
     frontpages = FrontPage.objects.all()
     whyuseagkis = WhyUseAgki.objects.all()
+    footer = FooterContact.objects.all()
+    team = Team.objects.all()
+    featured = FeaturedPage.objects.all()
     if request.user.is_authenticated:
         # Retrieve the total_cart only if the user is authenticated
         total_cart = Order.objects.filter(user=request.user).count()
@@ -128,6 +143,9 @@ def index(request):
         'frontpages':frontpages,
         'whyuseagkis':whyuseagkis,
         'total_cart':total_cart,
+        'footer':footer,
+        'team':team,
+        'featured':featured,
     }
     return render(request,'app/index.html',context)
 
@@ -1098,50 +1116,54 @@ def total_cost_per_period(request):
 
 # //////////////////////////////chatting with doctor//////
 
-class ListThreads(View):
-	def get(self, request, *args, **kwargs):
-		threads = ThreadModel.objects.filter(Q(user=request.user) | Q(receiver=request.user))
 
-		context = {
-			'threads':threads
-		}
-		return render(request, 'app/inbox.html',context)
+
+class ListThreads(View):
+    def get(self, request, *args, **kwargs):
+        if request.user.payment_status:  # Check payment_status
+            threads = ThreadModel.objects.filter(Q(user=request.user) | Q(receiver=request.user))
+            context = {'threads': threads}
+            return render(request, 'app/inbox.html', context)
+        else:
+            return HttpResponse("PAY IN ORDER TO CHAT")
 
 class CreateThread(View):
-	def get(self,request,*args,**kwargs):
-		form = ThreadForm()
+    def get(self, request, *args, **kwargs):
+        form = ThreadForm()
+        chatpay = ChatPay.objects.all()  # Proper indentation here
 
-		context = {
-			'form':form
-		}
-		return render(request, 'app/create_thread.html',context)
+        context = {
+            'form': form,
+            'chatpay': chatpay
+        }
+        return render(request, 'app/create_thread.html', context)
 
+    def post(self, request, *args, **kwargs):
+        form = ThreadForm(request.POST)
 
-	def post(self,request,*args,**kwargs):
-		form = ThreadForm(request.POST)
+        username = request.POST.get('username')
 
-		username = request.POST.get('username')
+        try:
+            receiver = CustomUser.objects.get(username=username)
+            if ThreadModel.objects.filter(user=request.user, receiver=receiver).exists():
+                thread = ThreadModel.objects.filter(user=request.user, receiver=receiver)[0]
+                return redirect('thread', pk=thread.pk)
+            elif ThreadModel.objects.filter(user=receiver, receiver=request.user).exists():
+                thread = ThreadModel.objects.filter(user=receiver, receiver=request.user)[0]
+                return redirect('thread', pk=thread.pk)
 
-		try:
-			receiver = CustomUser.objects.get(username=username)
-			if ThreadModel.objects.filter(user=request.user, receiver=receiver).exists():
-				thread = ThreadModel.objects.filter(user=request.user, receiver=receiver)[0]
-				return redirect('thread', pk=thread.pk)
-			elif ThreadModel.objects.filter(user=receiver, receiver=request.user).exists():
-					thread = ThreadModel.objects.filter(user=receiver, receiver=request.user)[0]
-					return redirect('thread', pk=thread.pk)
+            if form.is_valid():
+                thread = ThreadModel(
+                    user=request.user,
+                    receiver=receiver
+                )
+                thread.save()
 
-			if form.is_valid():
-				thread = ThreadModel(
-						user = request.user,
-						receiver=receiver
-					)
-				thread.save()
+                return redirect('thread', pk=thread.pk)
+        except:
+            messages.error(request, 'Invalid username')
+            return redirect('create-thread')
 
-				return redirect('thread', pk=thread.pk)
-		except:
-			messages.error(request, 'Invalid username')
-			return redirect('create-thread')
 
 class ThreadView(View):
 	def get(self, request, pk, *args, **kwargs):
@@ -1237,7 +1259,16 @@ def medicationAdd(request):
     
     return render(request,'app/medicationAdd.html',context)
 
-def medicationRequest(request):
+def medicationRequest(request, category_slug=None):
+    footer = FooterContact.objects.all()
+    categories = Category.objects.all().order_by('-id')
+    items = Item.objects.all().order_by('-id')
+    category = None
+
+    if category_slug:
+        category = get_object_or_404(Category, slug=category_slug)
+        items = items.filter(category=category)
+
     if 'q' in request.GET:
         q = request.GET['q']
 
@@ -1251,14 +1282,16 @@ def medicationRequest(request):
         for word in search_words:
             combined_q |= Q(title__icontains=word) | Q(description__icontains=word)
 
-        # Filter pictures based on the combined Q object
-        data = Item.objects.filter(combined_q).order_by('-id')
-    else:
-        data = Item.objects.all().order_by('-id')
+        # Filter items based on the combined Q object
+        items = items.filter(combined_q)
+
     context = {
-        'data': data
+        'data': items,
+        'footer': footer,
+        'categories': categories,
+        'category': category,
     }
-    return render(request,'app/medicationRequest.html',context)
+    return render(request, 'app/medicationRequest.html', context)
 
 def get_suggestions(request):
     if 'q' in request.GET:
@@ -1372,10 +1405,18 @@ def medicationDescriptionEdit(request,id):
     return render(request,'app/medicationDescriptionEdit.html',context)
 
 def bookLabTest(request):
-    return render(request,'app/bookLabTest.html')
+    footer = FooterContact.objects.all()
+    laboratory_categories = LaboratoryTestCategory.objects.all()
+
+    context = {
+        'footer': footer,
+        'laboratory_categories': laboratory_categories,
+    }
+    return render(request, 'app/bookLabTest.html', context)
 
 def bookDoctor(request):
     departments = Department.objects.all()
+    footer = FooterContact.objects.all()
     form = BookDoctorForm()
     if request.method == 'POST':
         form = BookDoctorForm(request.POST,request.FILES)
@@ -1390,6 +1431,7 @@ def bookDoctor(request):
     context = {
         'departments':departments,
         'form':form,
+        'footer':footer,
     }
     return render(request,'app/bookDoctor.html',context)
 
@@ -1400,10 +1442,12 @@ class OrderSummaryView(View):
 
         # Retrieve user data for the form
         form = UserEditForm2(instance=user)
+        footer = FooterContact.objects.all()
 
         context = {
             'order': order,
             'form': form,
+            'footer':footer,
         }
         return render(request, 'app/order_summary.html', context)
 
@@ -1424,13 +1468,7 @@ class OrderSummaryView(View):
         }
         return render(request, 'app/order_summary.html', context)
     
-# class OrderSummaryView(View):
-#     def get(self, *args, **kwargs):
-#         order = Order.objects.get(user=self.request.user, ordered=False)
-#         context = {
-#             'order':order
-#         }
-#         return render(self.request, 'app/order_summary.html',context)
+
     
 def add_to_cart(request, id):
     item = get_object_or_404(Item, id=id)
@@ -1543,3 +1581,321 @@ def doctorBookingTime(request,id):
          }
     
     return render(request,'app/doctorBookingTime.html',context)
+
+
+# purpose section ##########################################
+def purposeFirst(request,id):
+    s = PurposeTop.objects.get(id=id)
+    form = PurposeFirstForm(instance=s)
+    if request.method=='POST':
+        form = PurposeFirstForm(request.POST,instance=s)
+        if form.is_valid():
+            form.save()
+            return redirect('purpose')
+    context = {
+            'form':form,
+            's':s
+         }
+    
+    return render(request,'app/purposeFirst.html',context)
+
+def purposeSecond(request,id):
+    s = PurposeTop.objects.get(id=id)
+    form = PurposeSecondForm(instance=s)
+    if request.method=='POST':
+        form = PurposeSecondForm(request.POST,instance=s)
+        if form.is_valid():
+            form.save()
+            return redirect('purpose')
+    context = {
+            'form':form,
+            's':s
+         }
+    
+    return render(request,'app/purposeSecond.html',context)
+
+def purposeProblem(request,id):
+    s = PurposeTop.objects.get(id=id)
+    form = PurposeProblemForm(instance=s)
+    if request.method=='POST':
+        form = PurposeProblemForm(request.POST,instance=s)
+        if form.is_valid():
+            form.save()
+            return redirect('purpose')
+    context = {
+            'form':form,
+            's':s
+         }
+    
+    return render(request,'app/purposeProblem.html',context)
+
+def purposeSolution(request,id):
+    s = PurposeTop.objects.get(id=id)
+    form = PurposeSolutionForm(instance=s)
+    if request.method=='POST':
+        form = PurposeSolutionForm(request.POST,instance=s)
+        if form.is_valid():
+            form.save()
+            return redirect('purpose')
+    context = {
+            'form':form,
+            's':s
+         }
+    
+    return render(request,'app/purposeSolution.html',context)
+
+def purposeEdit(request,id):
+    s = Purpose.objects.get(id=id)
+    form = PurposeForm(instance=s)
+    if request.method=='POST':
+        form = PurposeForm(request.POST,instance=s)
+        if form.is_valid():
+            form.save()
+            return redirect('purpose')
+    context = {
+            'form':form,
+            's':s
+         }
+    
+    return render(request,'app/purposeEdit.html',context)
+
+def purposeAdd(request):
+    form = PurposeForm()
+    if request.method=='POST':
+        form = PurposeForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request,"purpose added successfully")
+            return redirect('purposeAdd')
+    context = {
+            'form':form
+        }
+    return render(request,'app/purposeAdd.html',context)
+
+def purposeDelete(request,id):
+    x = get_object_or_404(Purpose,id=id)
+    x.delete()
+    return redirect('purpose')
+
+def purposeSuccessAdd(request):
+    form = SuccessForm()
+    if request.method=='POST':
+        form = SuccessForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request,"SuccessForm added successfully")
+            return redirect('purposeAdd')
+    context = {
+            'form':form
+        }
+    return render(request,'app/purposeSuccessAdd.html',context)
+
+def purposeSuccessEdit(request,id):
+    s = Success.objects.get(id=id)
+    form = SuccessForm(instance=s)
+    if request.method=='POST':
+        form = SuccessForm(request.POST,instance=s)
+        if form.is_valid():
+            form.save()
+            return redirect('purpose')
+    context = {
+            'form':form,
+            's':s
+         }
+    
+    return render(request,'app/purposeSuccessEdit.html',context)
+
+def purposeSuccessDelete(request,id):
+    x = get_object_or_404(Success,id=id)
+    x.delete()
+    return redirect('purpose')
+
+def purposeVideoEdit(request,id):
+    s = PurposeTop.objects.get(id=id)
+    form = PurposeVideoForm(instance=s)
+    if request.method=='POST':
+        form = PurposeVideoForm(request.POST,request.FILES,instance=s)
+        if form.is_valid():
+            form.save()
+            
+            return redirect('purpose')
+    context = {
+            'form':form,
+            's':s
+         }
+
+    return render(request,'app/purposeVideoEdit.html',context)
+
+def footerContact(request,id):
+    s = FooterContact.objects.get(id=id)
+    form = FooterContactForm(instance=s)
+    if request.method=='POST':
+        form = FooterContactForm(request.POST,request.FILES,instance=s)
+        if form.is_valid():
+            form.save()
+            
+            return redirect('index')
+    context = {
+            'form':form,
+            's':s
+         }
+
+    return render(request,'app/footerContact.html',context)
+
+def teamAdd(request):
+    form = TeamForm()
+    if request.method=='POST':
+        form = TeamForm(request.POST,request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request,"Team member added successfully")
+            
+            return redirect('teamAdd')
+    context = {
+            'form':form,
+         }
+
+    return render(request,'app/teamAdd.html',context)
+
+def teamEdit(request,id):
+    s = Team.objects.get(id=id)
+    form = TeamForm(instance=s)
+    if request.method=='POST':
+        form = TeamForm(request.POST,request.FILES,instance=s)
+        if form.is_valid():
+            form.save()
+            
+            return redirect('index')
+    context = {
+            'form':form,
+            's':s
+         }
+
+    return render(request,'app/teamEdit.html',context)
+
+def teamDelete(request,id):
+    x = get_object_or_404(Team,id=id)
+    x.delete()
+    return redirect('index')
+
+def featuredEdit(request,id):
+    s = FeaturedPage.objects.get(id=id)
+    form = FeaturedPageForm(instance=s)
+    if request.method=='POST':
+        form = FeaturedPageForm(request.POST,request.FILES,instance=s)
+        if form.is_valid():
+            form.save()
+            
+            return redirect('index')
+    context = {
+            'form':form,
+            's':s
+         }
+
+    return render(request,'app/featuredEdit.html',context)
+
+def featuredAdd(request):
+    form = FeaturedPageForm()
+    if request.method=='POST':
+        form = FeaturedPageForm(request.POST,request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request,"Sponsor added successfully")
+            
+            return redirect('featuredAdd')
+    context = {
+            'form':form,
+         }
+
+    return render(request,'app/featuredAdd.html',context)
+
+def featuredDelete(request,id):
+    x = get_object_or_404(FeaturedPage,id=id)
+    x.delete()
+    return redirect('index')
+
+def chatpayedit(request,id):
+    s = ChatPay.objects.get(id=id)
+    form = ChatPayForm(instance=s)
+    if request.method=='POST':
+        form = ChatPayForm(request.POST,instance=s)
+        if form.is_valid():
+            form.save()
+            
+            return redirect('index')
+    context = {
+            'form':form,
+            's':s
+         }
+
+    return render(request,'app/chatpayedit.html',context)
+
+def packageAdd(request):
+    form = LaboratoryTestCategoryForm()
+    if request.method=='POST':
+        form = LaboratoryTestCategoryForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request,"package added successfully")
+            
+            return redirect('packageAdd')
+    context = {
+            'form':form,
+         }
+
+    return render(request,'app/packageAdd.html',context)
+
+def packageItem(request):
+    form = LaboratoryTestForm()
+    if request.method=='POST':
+        form = LaboratoryTestForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request,"package item added successfully")
+            
+            return redirect('packageItem')
+    context = {
+            'form':form,
+         }
+
+    return render(request,'app/packageItem.html',context)
+
+
+
+
+def order_confirmation_success(request):
+    return render(request, 'app/order_confirmation_success.html')
+
+def confirm_order(request, category_id):
+    category = LaboratoryTestCategory.objects.get(pk=category_id)
+    if request.method == 'POST':
+        form = OrderConfirmationForm(request.POST)
+        if form.is_valid():
+            # Save the order confirmation data to the database
+            form.save()
+            return redirect('order_confirmation_success')
+    else:
+        form = OrderConfirmationForm(initial={'category': category_id, 'user': request.user})
+    return render(request, 'app/confirm_order.html', {'form': form, 'category': category})
+
+def booklabtestview(request):
+    x = OrderConfirmation.objects.all()
+    context = {
+        'x':x
+    }
+    return render(request,'app/booklabtestview.html',context)
+
+def booklabtestprocess(request,id):
+    s = OrderConfirmation.objects.get(id=id)
+    form = OrderConfirmationProcessForm(instance=s)
+    if request.method=='POST':
+        form = OrderConfirmationProcessForm(request.POST,instance=s)
+        if form.is_valid():
+            form.save()
+            return redirect('booklabtestview')
+    context = {
+            'form':form,
+            's':s
+         }
+    
+    return render(request,'app/booklabtestprocess.html',context)

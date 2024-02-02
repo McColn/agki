@@ -27,18 +27,24 @@
                                 <p><del>Tsh.{{x.price}}/=.</del></p>
                                 <h6>{{x.description}}</h6>
                                 <p>seller: {{x.user}}</p>
-                                <p>Number of Dosage</p>
+                                <!-- <p>Number of Dosage</p>
                                 
                                     <div class="btn-group">
                                       <button type="button" class="btn btn-secondary" id="decreaseBtn">-</button>
                                       <button type="button" class="btn btn-secondary" id="numberBtn">1</button>
                                       <button type="button" class="btn btn-secondary" id="increaseBtn">+</button>
-                                    </div>
+                                    </div> -->
+                                {% if user.is_authenticated %}
                                 <div class="mt-2">
                                     <a href="{{x.get_add_to_cart_url}}">
                                         <button class="btn btn-info" style="background-color: green;color: #fff;">Add to Cart</button>
                                     </a>
                                 </div>
+                                {% else %}
+                                    <div class="d-grid gap-2">
+                                        <a href="{% url 'signin' %}"><button class="btn btn-success mt-3" type="submit">Login to Continue</button></a>
+                                    </div>
+                                {% endif %}
                     </div>
                 </div>
 

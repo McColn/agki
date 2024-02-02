@@ -1,0 +1,48 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block content %}
+
+    <div class="container">
+        <br>
+      <div class="col-12 grid-margin stretch-card mb-5">
+          <div class="card">
+              <div class="card-body">
+                  <h2 class="card-title">Add Purpose Form</h2>
+                  {% for message in messages %}
+                    <div class = "alert alert-primary alert-dismissible fade show" role="alert">
+                        {{message}}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
+                    </div>
+                    {% endfor %}
+                  
+                  <form class="forms-sample" method='POST'>
+      
+                      {% csrf_token %}
+                      
+                    
+
+                      <div class="form-group">
+                        <label for="name">Purpose</label>
+                        <input type="text" class="form-control" name="description" value="{{s.description}}">
+                      </div>
+                      <br>
+
+                      
+                    
+                    
+                    <button type="submit" class="btn btn-success mr-2">Submit</button>
+                    
+                  </form>
+                  <button class="btn btn-light" onclick="goBack()">Cancel</button>
+      
+                    <script>
+                        function goBack() {
+                            window.history.back();
+                        }
+                    </script>
+              </div>
+          </div>
+      </div>
+      </div>   
+
+{% endblock %}

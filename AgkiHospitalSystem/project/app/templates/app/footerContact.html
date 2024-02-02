@@ -1,0 +1,42 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container">
+    <div class="col-12 mb-5 grid-margin stretch-card" style="padding-top: 50px;">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Edit Form</h4>
+                
+                <form method='POST' class="forms-sample" >
+                    {% csrf_token %}
+
+                    <div class="form-group">
+                      <label for="gender">phonenumber:</label>
+                      <textarea class="form-control" name="phonenumber" rows="1">{{s.phonenumber}}</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gender">email:</label>
+                        <textarea class="form-control" name="email" rows="1">{{s.email}}</textarea>
+                      </div>
+                 
+                  <div class="form-group">
+                    <label for="gender">address:</label>
+                    <textarea class="form-control" name="address" rows="1">{{s.address}}</textarea>
+                  </div>
+                  <br>
+                  
+                  <button type="submit" class="btn btn-success mr-2">Submit</button>
+                  
+                </form>
+
+
+                <a href="{% url 'purpose' %}">
+                  <button class="btn btn-light">Cancel</button>
+              </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

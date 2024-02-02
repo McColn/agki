@@ -8,7 +8,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
 
 class RegistrationForm(UserCreationForm):
-    
+    phone = forms.CharField(max_length=15)
+
     class Meta:
         model = CustomUser
         fields = ['first_name', 'last_name', 'age', 'username', 'password1', 'password2', 'phone']
@@ -31,6 +32,15 @@ class RegistrationForm(UserCreationForm):
 
         return password1
 
+    def clean_phone(self):
+        phone = self.cleaned_data.get('phone')
+
+        # Check if the phone number starts with '255'
+        if not phone.startswith('+'):
+            raise ValidationError("Phone number must start with county code eg '+255'.")
+
+        return phone
+
     def clean(self):
         cleaned_data = super().clean()
         password1 = cleaned_data.get('password1')
@@ -48,7 +58,7 @@ class UserEditForm(forms.ModelForm):
     
     class Meta:
         model = CustomUser
-        fields = ['username','first_name','last_name','age','location','phone','image','position','department','is_doctor','is_laboratorist','is_receptionist','is_patient','is_pharmacist','district','ward','street']
+        fields = ['username','first_name','last_name','age','location','phone','image','position','department','is_doctor','is_laboratorist','is_receptionist','is_patient','is_pharmacist','district','ward','street','is_seller']
 
 class UserEditForm2(forms.ModelForm):
     
@@ -279,3 +289,88 @@ class BookDoctorTimeForm(forms.ModelForm):
     class Meta:
         model = BookDoctor
         fields = ['period']
+
+
+# purpose forms
+class PurposeVideoForm(forms.ModelForm):
+    class Meta:
+        model = PurposeTop
+        fields = ['video_file']
+
+class PurposeFirstForm(forms.ModelForm):
+    class Meta:
+        model = PurposeTop
+        fields = ['header','subheader','description']
+
+class PurposeSecondForm(forms.ModelForm):
+    class Meta:
+        model = PurposeTop
+        fields = ['descriptionSecond']
+
+class PurposeProblemForm(forms.ModelForm):
+    class Meta:
+        model = PurposeTop
+        fields = ['problem']
+
+class PurposeSolutionForm(forms.ModelForm):
+    class Meta:
+        model = PurposeTop
+        fields = ['solution']
+
+class PurposeForm(forms.ModelForm):
+    class Meta:
+        model = Purpose
+        fields = ['description']
+
+class SuccessForm(forms.ModelForm):
+    class Meta:
+        model = Success
+        fields = ['description']
+
+class FooterContactForm(forms.ModelForm):
+    class Meta:
+        model = FooterContact
+        fields = ['phonenumber','email','address']
+
+class LaboratoryTestCategoryForm(forms.ModelForm):
+    class Meta:
+        model = LaboratoryTestCategory
+        fields = ['title','cost']
+
+class LaboratoryTestForm(forms.ModelForm):
+    category = forms.ModelChoiceField(
+        queryset=LaboratoryTestCategory.objects.all(),
+        empty_label="Select a category",
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+    class Meta:
+        model = LaboratoryTest
+        fields = ['title','category']
+
+class FeaturedPageForm(forms.ModelForm):
+    class Meta:
+        model = FeaturedPage
+        fields = ['title','image']
+
+class TeamForm(forms.ModelForm):
+    class Meta:
+        model = Team
+        fields = ['name','role','image']
+
+class ChatPayForm(forms.ModelForm):
+    class Meta:
+        model = ChatPay
+        fields = ['header','lipanamba','name','cost','notification']
+
+
+
+class OrderConfirmationForm(forms.ModelForm):
+    class Meta:
+        model = OrderConfirmation
+        fields = ['user', 'category']
+        widgets = {'user': forms.HiddenInput(), 'category': forms.HiddenInput()}
+
+class OrderConfirmationProcessForm(forms.ModelForm):
+    class Meta:
+        model = OrderConfirmation
+        fields = ['is_processed']

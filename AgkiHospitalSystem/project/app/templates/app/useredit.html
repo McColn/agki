@@ -57,6 +57,7 @@
                 <input type="file" class="form-control" name="image" >
                 <br>
               </div>
+              {% if user.is_superuser %}
               <div class="form-check">
                 <input class="form-check-input" type="checkbox" name="is_doctor" {% if s.is_doctor %}checked{% endif %}>
                 <label class="form-check-label" for="is_doctor">Is Doctor</label>
@@ -77,7 +78,11 @@
                 <input class="form-check-input" type="checkbox" name="is_patient" {% if s.is_patient %}checked{% endif %}>
                 <label class="form-check-label" for="is_patient">Is Patient</label>
             </div>
-              
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" name="is_seller" {% if s.is_seller %}checked{% endif %}>
+              <label class="form-check-label" for="is_seller">Is Seller</label>
+          </div>
+            {% endif %}
               <button type="submit" class="btn btn-primary mr-2">Submit</button>
               
             </form>

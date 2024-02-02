@@ -105,5 +105,41 @@ urlpatterns = [
     path('remove_single_from_cart/<int:id>/', views.remove_single_from_cart, name="remove_single_from_cart"),
 
     path('api/suggestions/', get_suggestions, name='get_suggestions'),
+
+    path('purposeFirst/<int:id>/', views.purposeFirst, name='purposeFirst'),
+    path('purposeSecond/<int:id>/', views.purposeSecond, name='purposeSecond'),
+    path('purposeProblem/<int:id>/', views.purposeProblem, name='purposeProblem'),
+    path('purposeSolution/<int:id>/', views.purposeSolution, name='purposeSolution'),
+    path('purposeEdit/<int:id>/', views.purposeEdit, name='purposeEdit'),
+    path('purposeSuccessEdit/<int:id>/', views.purposeSuccessEdit, name='purposeSuccessEdit'),
+    path('purposeDelete/<int:id>/', views.purposeDelete, name='purposeDelete'),
+    path('purposeAdd/', views.purposeAdd, name='purposeAdd'),
+    path('purposeSuccessAdd/', views.purposeSuccessAdd, name='purposeSuccessAdd'),
+    path('purposeDelete/<int:id>/', views.purposeDelete, name='purposeDelete'),
+    path('purposeSuccessDelete/<int:id>/', views.purposeSuccessDelete, name='purposeSuccessDelete'),
+    path('purposeVideoEdit/<int:id>/', views.purposeVideoEdit, name='purposeVideoEdit'),
+    path('footerContact/<int:id>/', views.footerContact, name='footerContact'),
+
+    path('teamAdd/', views.teamAdd, name='teamAdd'),
+    path('teamEdit/<int:id>/', views.teamEdit, name='teamEdit'),
+    path('teamDelete/<int:id>/', views.teamDelete, name='teamDelete'),
+
+    path('featuredAdd/', views.featuredAdd, name='featuredAdd'),
+    path('featuredEdit/<int:id>/', views.featuredEdit, name='featuredEdit'),
+    path('featuredDelete/<int:id>/', views.featuredDelete, name='featuredDelete'),
+
+    path('chatpayedit/<int:id>/', views.chatpayedit, name='chatpayedit'),
+
+    path('packageAdd/', views.packageAdd, name='packageAdd'),
+    path('packageItem/', views.packageItem, name='packageItem'),
+
+    path('<slug:category_slug>', views.medicationRequest, name='product_by_category'),
+
+
+    path('confirm_order/<int:category_id>/', views.confirm_order, name='confirm_order'),
+    path('order_confirmation_success/', views.order_confirmation_success, name='order_confirmation_success'),
+
+    path('booklabtestview/', views.booklabtestview, name='booklabtestview'),
+    path('booklabtestprocess/<int:id>/', views.booklabtestprocess, name='booklabtestprocess'),
    
    ]

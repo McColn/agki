@@ -1,0 +1,17 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="p-5 d-flex justify-content-center">
+    <form method="post">
+        {% csrf_token %}
+        <h2>Confirm Order!</h2>
+        <p>You selected the category: {{ category.title }}</p>
+        <p>Total Cost: {{ category.cost }}/= </p>
+        <p>Do you want to confirm your order?</p>
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-success">Confirm</button>
+    </form>
+</div>
+
+{%endblock%}

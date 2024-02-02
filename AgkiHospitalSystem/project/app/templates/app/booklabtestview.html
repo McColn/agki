@@ -1,0 +1,37 @@
+{% extends 'app/base2.html' %}
+{%block content%}
+<div class="container">
+  <h5 class="mb-3">Lab Test Booking</h5>
+
+
+<table class="table table-bordered">
+  <thead>
+      <tr>
+          <th>User</th>
+          <th>Category</th>
+          <th>Cost</th>
+          <th>Time</th>
+          <th>Action</th>
+      </tr>
+  </thead>
+  <tbody>
+      {% for i in x %}
+          
+          <tr class="bg-white">
+                  <td>{{ i.user.username }}</td>
+                  <td>{{ i.category.title }}</td>
+                  <td>{{ i.category.cost }}</td>
+                  <td>{{ i.timestamp }}</td>
+                  <td>
+                    {{ i.is_processed }}
+                    <a href="{% url 'booklabtestprocess' i.id %}"><button class="btn">Process</button></a>
+                  </td>
+                  
+                  
+              </tr>
+          
+      {% endfor %}
+  </tbody>
+</table>
+</div>
+{%endblock%}

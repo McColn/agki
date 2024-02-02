@@ -2,6 +2,21 @@
 {% load static %}
 {% block content %}
 
+<style>
+    .row.flex-grow-1 {
+    display: flex;
+}
+
+.col-lg-4.col-sm-6.bg-white {
+    display: flex;
+}
+
+.service.theme-shadow {
+    flex-grow: 1;
+}
+
+</style>
+
     <!-- FEATURED LOGOS -->
     <section id="services" class="p-3">
         <div class="container">
@@ -16,68 +31,33 @@
             </div>
             <div class="row g-3 text-center">
                 
-                <div class="col-lg-4 col-sm-6 bg-white">
-                    <div class="service theme-shadow p-lg-5 p-4">
-                        <h4 class="mt-2 mb-3">Diamond</h4>
-                        <div>
-                            <p>Complete Blood Count (CBC)</p>
-                            <p>Lipid Panel (Cholesterol Levels)</p>
-                            <p>Blood Glucose Level</p>
-                            <p>Kidney Function Tests (Creatinine, BUN)</p>
-                            <p>Urinalysis</p>
-                            <p>Chest X-ray</p>
+                <div class="row flex-grow-1">
+                    {% for category in laboratory_categories %}
+                    <div class="col-lg-4 col-sm-6 bg-white d-flex">
+                        <div class="service theme-shadow p-lg-5 p-4 d-flex flex-column">
+                            <h4 class="mt-2 mb-3">{{ category.title }}</h4>
+                            <div class="flex-grow-1">
+                                {% for test in category.laboratorytest_set.all %}
+                                <p>{{ test.title }}</p>
+                                {% endfor %}
+                            </div>
+                            <div class="text-black">
+                                <p style="font-size: xx-large;"><b>Tsh. {{ category.cost }}/=</b></p>
+                            </div>
+                            <div>
+                                <a href="{% url 'confirm_order' category_id=category.id %}" class="btn btn-success w-100">Order now</a>
+                            </div>
                         </div>
-                        <div class="text-black">
-                            <p style="font-size: xx-large;"><b>Tsh. 30,000/=</b></p>
-                        </div>
-                        <div>
-                            <button class="btn btn-success w-100">Order now</button>
-                        </div>
-                        
                     </div>
+                    {% endfor %}
                 </div>
+                
 
-                <div class="col-lg-4 col-sm-6 bg-white">
-                    <div class="service theme-shadow p-lg-5 p-4">
-                        <h4 class="mt-2 mb-3">Silver</h4>
-                        <div>
-                            <p>Complete Blood Count (CBC)</p>
-                            <p>Lipid Panel (Cholesterol Levels)</p>
-                            <p>Blood Glucose Level</p>
-                            <p>Kidney Function Tests (Creatinine, BUN)</p>
-                            <p>Urinalysis</p>
-                            <p>Chest X-ray</p>
-                        </div>
-                        <div class="text-black">
-                            <p style="font-size: xx-large;"><b>Tsh. 15,000/=</b></p>
-                        </div>
-                        <div>
-                            <button class="btn btn-success w-100">Order now</button>
-                        </div>
-                        
-                    </div>
-                </div>
 
-                <div class="col-lg-4 col-sm-6 bg-white">
-                    <div class="service theme-shadow p-lg-5 p-4">
-                        <h4 class="mt-2 mb-3">Pratnum</h4>
-                        <div>
-                            <p>Complete Blood Count (CBC)</p>
-                            <p>Lipid Panel (Cholesterol Levels)</p>
-                            <p>Blood Glucose Level</p>
-                            <p>Kidney Function Tests (Creatinine, BUN)</p>
-                            <p>Urinalysis</p>
-                            <p>Chest X-ray</p>
-                        </div>
-                        <div class="text-black">
-                            <p style="font-size: xx-large;"><b>Tsh. 7,000/=</b></p>
-                        </div>
-                        <div>
-                            <button class="btn btn-success w-100">Order now</button>
-                        </div>
-                        
-                    </div>
-                </div>
+                
+
+                <a href="{% url 'packageAdd' %}"><button class="btn btn-success">Add Package</button></a>
+                <a href="{% url 'packageItem' %}"><button class="btn btn-success">Add Lab Item</button></a>
                 
                 
                

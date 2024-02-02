@@ -30,3 +30,17 @@ admin.site.register(OrderItem)
 admin.site.register(Category)
 
 admin.site.register(BookDoctor)
+
+admin.site.register(Purpose)
+admin.site.register(Success)
+admin.site.register(PurposeTop)
+
+admin.site.register(FooterContact)
+admin.site.register(FeaturedPage)
+admin.site.register(LaboratoryTestCategory)
+admin.site.register(LaboratoryTest)
+admin.site.register(Team)
+
+admin.site.register(ChatPay)
+
+admin.site.register(OrderConfirmation)

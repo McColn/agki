@@ -12,9 +12,9 @@
 	color: grey;
 	padding: 5px;
 	font-weight: bolder;
-	
+
 } */
-	
+
 .empty-text {
 	color: #777;
 	font-size: 1.5rem;
@@ -22,40 +22,54 @@
 }
 .sent-message {
 	background-color: #f3f3f3;
-	border-radius: 30px;
-	padding: 10px 25px;
-	width: 25%;
+	border-radius: 10px;
+	/*padding: 5px;*/
+	width: auto;
+	max-width: 60%;
 	color: darkgrey;
 	text-align: left;
+	float: left;
+
 }
 .received-message {
 	background-color: rgb(1, 196, 255);
 	color: #fff;
-	border-radius: 30px;
-	padding: 10px 25px;
-	width: 25%;
+	border-radius: 10px;
+	/*padding: 5px;*/
+	width: auto;
+	max-width: 60%;
 	float: right;
 	text-align: right;
 }
+
+
+
 .message-receiver-container {
 	margin-left: auto;
 	margin-right: 0;
 }
+.message-sender-container {
+	margin-right: auto;
+	margin-left: 0;
+}
 .message-image {
 	border-radius: 10px;
-	max-width: 35%;
+	max-width: 50%;
 	height: auto;
 	float: left;
+	text-align: left;
 }
 .message-images {
 	border-radius: 10px;
-	max-width: 35%;
+	max-width: 50%;
 	height: auto;
 	float: right;
 	text-align: right;
 }
-    
-    
+
+
+
+
     </style>
 
 
@@ -64,7 +78,7 @@
 
 <div class="container">
 <div class="row">
-	<div class=" card col-md-12 p-5 mt-5 p-3 shadow-sm">
+	<div class=" card col-md-12 p-5 mt-5 shadow-sm d-flex align-items-center justify-content-center">
 		{% if thread.receiver  == request.user %}
 			<h5>@{{ thread.user }}</h5>
 		{% else %}
@@ -75,7 +89,7 @@
 
 {% if message_list.all.count == 0%}
 <div class="row my-5">
-	<div class="col-md-12">
+	<div class="col-md-12 d-flex align-items-center justify-content-center">
 		<p class="empty-text">No Message</p>
 	</div>
 </div>
@@ -83,41 +97,44 @@
 
 {% for message in message_list %}
 <div class="row mb-5">
-	{% if message.sender_user == request.user %}
-	<div class="col-md-12 my-1">
-		
+    {% if message.sender_user == request.user %}
 
-		{% if message.image %}
-		<div>
-			<img src="{{ message.image.url }}" class="message-image">
-		</div>
-		{% endif %}
+    <div class="col-md-12">
+        {% if message.image %}
+        <div class="message-sender-container ms-auto mt-3">
+            <img src="{{ message.image.url }}" class="message-image">
+        </div>
+        <div class="clearfix"></div> <!-- Add clearfix to clear the float -->
+        {% endif %}
 
-			<div class="sent-message my-3">
-				<p>{{ message.body }}</p>
-			</div>
+        {% if message.body %}
+        <div class="sent-message d-flex align-items-center justify-content-center">
+            <p class="pt-2 mx-2">{{ message.body }}</p>
+        </div>
 
-	</div>
+        {% endif %}
+    </div>
+    {% elif message.receiver_user == request.user %}
+    <div class="col-md-12">
+        {% if message.image %}
+        <div class="message-receiver-container ms-auto">
+            <img src="{{ message.image.url }}" class="message-images">
+        </div>
+        <div class="clearfix"></div> <!-- Add clearfix to clear the float -->
+        {% endif %}
 
-	{% elif message.receiver_user == request.user %} 
-		<div class="col-md-12 offset-6">
-			{% if message.image %}
-		<div class="message-receiver-container ms-auto">
-			<img src="{{ message.image.url }}" class="message-images">
-		</div>
-		{% endif %}
-			<div class="received-message my-3">
-				<p>{{ message.body }}</p>
-			</div>
-		</div>
-
-	{% endif %}
-	
+        {% if message.body %}
+        <div class="received-message my-3">
+            <p class="pt-2 mx-2">{{ message.body }}</p>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
 </div>
 {% endfor %}
 
-<div class="row">
-	<div class="card col-md-12 p-3 shadow-sm">
+<div class="row p-2">
+	<div class="card col-md-12 p-3  shadow-sm">
 		<form method="POST" action="{% url 'create-messsage' thread.pk %}" enctype="multipart/form-data">
 			{% csrf_token %}
 			<div class="row">
@@ -127,7 +144,7 @@
 				<div class="col-md-4">
 					<input type="file" class="form-control" name="image" >
 				</div>
-			
+
 			</div>
 				<center>
 				<button class="btn btn-dark" type="submit">Send Message</button>

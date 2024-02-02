@@ -32,7 +32,10 @@ class CustomUser(AbstractUser):
     is_receptionist = models.BooleanField(default=False)
     is_pharmacist = models.BooleanField(default=False)
     is_patient = models.BooleanField(default=True)
+    is_seller = models.BooleanField(default=False)
     sms_sent = models.BooleanField(default=False)
+    payment_status = models.BooleanField(default=False)
+    sms_sent_payment = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         # Generate unique registration number if not already set
@@ -43,20 +46,55 @@ class CustomUser(AbstractUser):
 
         # Send SMS only if registration number is set and hasn't been sent before
         if self.reg_no and not self.sms_sent:
-            account_sid = 'AC28f9db7275f992a9cfbfc20e06888934'
-            auth_token = 'b639e8d2ca2979f56c247005bd812797'
-            client = Client(account_sid, auth_token)
+            url = "https://messaging-service.co.tz/api/sms/v1/text/single"
+            payload = {
+                "from": "RMNDR",
+                "to": self.phone,  # Assuming the phone number is stored in 'phone' field
+                "text": f"Dear {self.username}, you registered successfully to Agki Dispensary. Your registration number is {self.reg_no}",
+                "reference": "aswqetgcv"
+            }
+            headers = {
+                'Authorization': 'Basic QWdraWxhYjpLaW13ZXJpJjIwMjI=',
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
 
-            message = client.messages.create(
-                body=f"Dear {self.username}, you registered successfully to Agki Dispensary. Your registration number is {self.reg_no}",
-                from_='+19513389825',
-                to='+255748121594'
-            )
+            response = requests.post(url, headers=headers, data=json.dumps(payload))
 
-            print(message.sid)
+            # Check if the request was successful (status code 2xx)
+            if response.ok:
+                print("SMS sent successfully")
+            else:
+                print(f"Failed to send SMS. Status code: {response.status_code}, Response: {response.text}")
 
             # Set sms_sent to True to avoid sending the SMS multiple times
             self.sms_sent = True
+
+        # Check if payment_status changed to True
+        if self.payment_status and not self.sms_sent_payment:
+            url = "https://messaging-service.co.tz/api/sms/v1/text/single"
+            payload_payment = {
+                "from": "RMNDR",
+                "to": self.phone,  # Assuming the phone number is stored in 'phone' field
+                "text": "Your payment has been processed. You can now start chatting on our website. http://127.0.0.1:8000/create-thread",
+                "reference": "aswqetgcv"
+            }
+            headers_payment = {
+                'Authorization': 'Basic QWdraWxhYjpLaW13ZXJpJjIwMjI=',
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+
+            response_payment = requests.post(url, headers=headers_payment, data=json.dumps(payload_payment))
+
+            # Check if the request was successful (status code 2xx)
+            if response_payment.ok:
+                print("Payment SMS sent successfully")
+            else:
+                print(f"Failed to send payment SMS. Status code: {response_payment.status_code}, Response: {response_payment.text}")
+
+            # Set sms_sent_payment to True to avoid sending the SMS multiple times
+            self.sms_sent_payment = True
 
         super().save(*args, **kwargs)
 
@@ -366,27 +404,96 @@ class Order(models.Model):
         return total
 
 
+import requests
+import json
+
 class BookDoctor(models.Model):
-    user = models.ForeignKey(CustomUser,on_delete=models.CASCADE)
-    district = models.CharField(max_length=200,db_index=True)
-    ward = models.CharField(max_length=200,db_index=True)
-    street = models.CharField(max_length=200,db_index=True)
-    department = models.ForeignKey(Department,on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    district = models.CharField(max_length=200, db_index=True)
+    ward = models.CharField(max_length=200, db_index=True)
+    street = models.CharField(max_length=200, db_index=True)
+    department = models.ForeignKey(Department, on_delete=models.CASCADE)
     period = models.DateTimeField(null=True, blank=True)
 
     def save(self, *args, **kwargs):
         if self.period:
-            account_sid = 'AC28f9db7275f992a9cfbfc20e06888934'
-            auth_token = 'b639e8d2ca2979f56c247005bd812797'
-            client = Client(account_sid, auth_token)
+            url = "https://messaging-service.co.tz/api/sms/v1/text/single"
+            payload = {
+                "from": "RMNDR",
+                "to": self.user.phone,  # Update with the desired phone number
+                "text": f"Dear - {self.user.username} we receive your request we will come on  - {self.period}",
+                "reference": "aswqetgcv"
+            }
+            headers = {
+                'Authorization': 'Basic QWdraWxhYjpLaW13ZXJpJjIwMjI=',
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
 
-            message = client.messages \
-                            .create(
-                                body=f"Dear - {self.user.username} we receive your request we will come on  - {self.period}",
-                                from_='+19513389825',
-                                to ='+255748121594'
-                                # to=self.phonenumber
-                            )
+            response = requests.post(url, headers=headers, data=json.dumps(payload))
 
-            print(message.sid)
-        return super().save(*args,**kwargs)
+            # Check if the request was successful (status code 2xx)
+            if response.ok:
+                print("SMS sent successfully")
+            else:
+                print(f"Failed to send SMS. Status code: {response.status_code}, Response: {response.text}")
+
+        return super().save(*args, **kwargs)
+
+    
+# purpose section
+class PurposeTop(models.Model):
+    video_file = models.FileField(upload_to='media/',null=True, blank=True)
+    header = models.CharField(max_length=500)
+    subheader = models.CharField(max_length=500)
+    description = models.TextField(max_length=5000)
+    descriptionSecond = models.TextField(max_length=5000)
+    problem = models.TextField(max_length=5000)
+    solution = models.TextField(max_length=5000)
+
+class Purpose(models.Model):
+    description = models.TextField(max_length=5000)
+
+class Success(models.Model):
+    description = models.TextField(max_length=5000)
+
+class FooterContact(models.Model):
+    phonenumber = models.CharField(max_length=200)
+    email = models.CharField(max_length=200)
+    address = models.CharField(max_length=200)
+
+class FeaturedPage(models.Model):
+    title = models.CharField(max_length=100)
+    image = models.ImageField(upload_to ='media/',blank=True,null=True)
+    
+class LaboratoryTestCategory(models.Model):
+    title = models.CharField(max_length=100)
+    cost = models.IntegerField()
+    def __str__(self):
+        return self.title
+
+class LaboratoryTest(models.Model):
+    title = models.CharField(max_length=100)
+    category = models.ForeignKey(LaboratoryTestCategory, on_delete=models.CASCADE)
+
+class Team(models.Model):
+    name = models.CharField(max_length=100)
+    role = models.CharField(max_length=100)
+    image = models.ImageField(upload_to ='media/',blank=True,null=True)
+
+class ChatPay(models.Model):
+    header = models.CharField(max_length=200)
+    lipanamba = models.CharField(max_length=200)
+    name = models.CharField(max_length=200)
+    cost = models.CharField(max_length=100)
+    notification = models.CharField(max_length=200)
+
+
+class OrderConfirmation(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    category = models.ForeignKey(LaboratoryTestCategory, on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    is_processed = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.category.title} - {self.timestamp}"

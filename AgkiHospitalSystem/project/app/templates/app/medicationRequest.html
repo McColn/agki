@@ -7,7 +7,7 @@
         list-style-type: none;
         padding: 0;
         margin: 0;
-        /* Add any other styles you want for the ul element */
+        
     }
 
     #suggestions:hover {
@@ -15,97 +15,110 @@
     }
 </style>
 
-    <section id="blog" class="section-padding">
-        <div class="container">
-            <div class="row mb-3">
-                <div class="col">
-                    <form class="form-group" action="" method="GET">
-                        <div class="input-group">
-                            <input class="form-control" name="q" type="search" placeholder="Search" aria-label="Search" id="searchInput" autocomplete="off">
-                            <div class="input-group-append">
-                                <button class="btn btn-outline-success" type="submit">Search</button>
-                            </div>
-                        </div>
-                        <ul id="suggestions" style="display: none; "></ul>
-                    </form>
-                </div>
+<section id="blog" class="section-padding">
+    <div class="container">
+
+        <div class="row justify-content-center">
+            <div class="col-auto">
+                <a href="{% url 'medicationRequest' %}">
+                    <button class="btn btn-success mb-2">All Products</button>
+                </a>
             </div>
-              
-            <div class="row">
-                {% for i in data %}
+            {% for x in categories %}
+            <div class="col-auto">
+                <a href="{% url 'product_by_category' category_slug=x.slug %}">
+                    <button class="btn btn-success mb-2">{{ x.name }}</button>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+        
+
+        <div class="row mb-3">
+            <div class="col">
+                <form class="form-group" action="" method="GET">
+                    <div class="input-group">
+                        <input class="form-control" name="q" type="search" placeholder="Search" aria-label="Search" id="searchInput" autocomplete="off">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-success" type="submit">Search</button>
+                        </div>
+                    </div>
+                    <ul id="suggestions" style="display: none; "></ul>
+                </form>
+            </div>
+        </div>
+
+        <div class="row">
+            {% for i in data %}
                 <div class="col-md-3" data-aos="fade-down" data-aos-delay="150">
                     <div class="team-member image-zoom">
                         <div class="image-zoom-wrapper">
-                            <img src="{{i.image.url}}" alt="">
+                            <img src="{{ i.image.url }}" alt="">
                         </div>
                         <div class="row">
                             <div class="col-md-8">
-                                <h5 class="mt-4">{{i.title}}</h5>
-                                <p><b>Tsh.{{i.discount_price}}/=.</b> <del>Tsh.{{i.price}}/=.</del></p>
+                                <h5 class="mt-4">{{ i.title }}</h5>
+                                <p><b>Tsh.{{ i.discount_price }}/=.</b> <del>Tsh.{{ i.price }}/=.</del></p>
                             </div>
-                            
-                                <div class="col-md-4 text-end p-4">
-                                    <a href="{% url 'medicationDescription' i.id %}">
-                                        <i class="fas fa-shopping-cart fa-2x justify-content-center" style="color: green;"></i>
-                                    </a>
-                                </div>
-                            
+                            <div class="col-md-4 text-end p-4">
+                                <a href="{% url 'medicationDescription' i.id %}">
+                                    <i class="fas fa-shopping-cart fa-2x justify-content-center" style="color: green;"></i>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
-                {% endfor %}
-            </div>
-            
+            {% endfor %}
         </div>
-    </section>
 
+    </div>
+</section>
 
-    <script>
-        const searchInput = document.getElementById('searchInput');
-        const suggestionsList = document.getElementById('suggestions');
-      
-        // Event listener for the input field
-        searchInput.addEventListener('input', function() {
-          const query = searchInput.value.trim();
-      
-          // Clear previous suggestions
-          suggestionsList.innerHTML = '';
-      
-          // Fetch suggestions from the server using AJAX
-          if (query.length > 0) {
+<script>
+    const searchInput = document.getElementById('searchInput');
+    const suggestionsList = document.getElementById('suggestions');
+  
+    // Event listener for the input field
+    searchInput.addEventListener('input', function() {
+        const query = searchInput.value.trim();
+    
+        // Clear previous suggestions
+        suggestionsList.innerHTML = '';
+    
+        // Fetch suggestions from the server using AJAX
+        if (query.length > 0) {
             fetch(`/api/suggestions/?q=${query}`)
-              .then(response => response.json())
-              .then(data => {
-                // Display suggestions
-                data.forEach(suggestion => {
-                  const li = document.createElement('li');
-                  li.textContent = suggestion;
-                  li.addEventListener('click', function() {
-                    // Set the clicked suggestion as the search input value
-                    searchInput.value = suggestion;
-                    // Clear the suggestions
-                    suggestionsList.innerHTML = '';
-                  });
-                  suggestionsList.appendChild(li);
-                });
-      
-                // Show the suggestions list
-                suggestionsList.style.display = 'block';
-              })
-              .catch(error => console.error('Error fetching suggestions:', error));
-          } else {
+                .then(response => response.json())
+                .then(data => {
+                    // Display suggestions
+                    data.forEach(suggestion => {
+                        const li = document.createElement('li');
+                        li.textContent = suggestion;
+                        li.addEventListener('click', function() {
+                            // Set the clicked suggestion as the search input value
+                            searchInput.value = suggestion;
+                            // Clear the suggestions
+                            suggestionsList.innerHTML = '';
+                        });
+                        suggestionsList.appendChild(li);
+                    });
+    
+                    // Show the suggestions list
+                    suggestionsList.style.display = 'block';
+                })
+                .catch(error => console.error('Error fetching suggestions:', error));
+        } else {
             // Hide the suggestions list if the input is empty
             suggestionsList.style.display = 'none';
-          }
-        });
-      
-        // Event listener to hide suggestions when clicking outside the input or suggestions
-        document.addEventListener('click', function(event) {
-          if (event.target !== searchInput && event.target.parentNode !== suggestionsList) {
+        }
+    });
+  
+    // Event listener to hide suggestions when clicking outside the input or suggestions
+    document.addEventListener('click', function(event) {
+        if (event.target !== searchInput && event.target.parentNode !== suggestionsList) {
             suggestionsList.style.display = 'none';
-          }
-        });
-    </script>
-    
+        }
+    });
+</script>
 
 {% endblock %}

@@ -1,0 +1,54 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container">
+    <div class="col-12 mb-5 grid-margin stretch-card" style="padding-top: 50px;">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Edit Form</h4>
+                
+                <form method='POST' class="forms-sample" >
+                    {% csrf_token %}
+
+                    <div class="form-group">
+                      <label for="gender">Header:</label>
+                      <input type="text" class="form-control" name="header" value="{{s.header}}" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gender">lipanamba:</label>
+                        <input type="text" class="form-control" name="lipanamba" value='{{s.lipanamba}}' />
+                      </div>
+
+                      <div class="form-group">
+                        <label for="gender">name:</label>
+                        <input type="text" class="form-control" name="name" value='{{s.name}}' />
+                      </div>
+
+                      <div class="form-group">
+                        <label for="gender">cost:</label>
+                        <input type="text" class="form-control" name="cost" value='{{s.cost}}' />
+                      </div>
+
+                      <div class="form-group">
+                        <label for="gender">notification:</label>
+                        <input type="text" class="form-control" name="notification" value='{{s.notification}}' />
+                      </div>
+
+                    
+                  <br>
+                  
+                  <button type="submit" class="btn btn-success mr-2">Submit</button>
+                  
+                </form>
+
+
+                <a href="{% url 'purpose' %}">
+                  <button class="btn btn-light">Cancel</button>
+              </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
