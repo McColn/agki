@@ -54,7 +54,7 @@ class CustomUser(AbstractUser):
                 "reference": "aswqetgcv"
             }
             headers = {
-                'Authorization': 'Basic QWdraWxhYjpLaW13ZXJpJjIwMjI=',
+                'Authorization': '',
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
             }
@@ -80,7 +80,7 @@ class CustomUser(AbstractUser):
                 "reference": "aswqetgcv"
             }
             headers_payment = {
-                'Authorization': 'Basic QWdraWxhYjpLaW13ZXJpJjIwMjI=',
+                'Authorization': '',
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
             }
@@ -425,7 +425,7 @@ class BookDoctor(models.Model):
                 "reference": "aswqetgcv"
             }
             headers = {
-                'Authorization': 'Basic QWdraWxhYjpLaW13ZXJpJjIwMjI=',
+                'Authorization': '',
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
             }
